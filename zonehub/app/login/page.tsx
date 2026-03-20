@@ -15,6 +15,10 @@ export default function LoginPage() {
   return (
     <div className="flex h-screen">
       <div className="w-1/2 bg-green-700 flex items-center justify-center text-white text-3xl font-bold">
+        <div className="text-xl font-semibold mb-8">
+          <img src="/mainLogo.svg" alt="ZoneHub Logo" className="w-10 h-10 inline-block mr-3" />
+            ZoneHub
+        </div>
         Welcome to ZoneHub
       </div>
 
