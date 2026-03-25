@@ -3,8 +3,8 @@
 import DashboardLayout from "../components/layout/DashboardLayout";
 import Image from "next/image";
 import Link from "next/link";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getLatestData } from "../../lib/api";
 
 function ZoneSelectorCard() {
   const [selectedZone, setSelectedZone] = useState("default");
@@ -117,7 +117,7 @@ function CriticalAlertsCard() {
   );
 }
 
-function SoilMoistureCard() {
+function SoilMoistureCard({ value }: { value: number }) {
   return (
     <div className="bg-white rounded-[24px] p-6 shadow-sm border border-gray-50 flex flex-col h-full">
       <div className="flex items-center gap-2 mb-6">
@@ -133,14 +133,14 @@ function SoilMoistureCard() {
           <path className="text-[#3CC15A]" strokeDasharray="75, 100" strokeWidth="3" strokeLinecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
         </svg>
         <div className="absolute flex items-center justify-center inset-0">
-          <span className="text-3xl font-bold text-gray-900">75%</span>
+          <span className="text-3xl font-bold text-gray-900">{value}%</span>
         </div>
       </div>
     </div>
   );
 }
 
-function TemperatureCard() {
+function TemperatureCard({ temp }: { temp: number }) {
   return (
     <div className="bg-white rounded-[24px] p-6 shadow-sm border border-gray-50 flex flex-col h-full">
       <div className="flex items-center gap-2 mb-6">
@@ -153,7 +153,7 @@ function TemperatureCard() {
         {/* Thermometer 1 */}
         <div className="flex flex-col items-center">
           <span className="text-[10px] text-gray-400 font-bold mb-1">Soil Temp</span>
-          <span className="text-sm font-bold text-gray-900 mb-4">3.55 °C</span>
+          <span className="text-sm font-bold text-gray-900 mb-4">{temp} °C</span>
           <div className="w-10 h-24 bg-gray-100 rounded-full relative flex justify-center py-2">
             <div className="absolute bottom-2 w-1.5 h-10 bg-red-600 rounded-full"></div>
             {/* Marks */}
@@ -187,20 +187,30 @@ function TemperatureCard() {
   );
 }
 
-function PumpStatusCard() {
+function PumpStatusCard({ status }: { status: string }) {
+  
+  const isOn = status === "ON";
+
   return (
     <div className="bg-white rounded-[24px] p-6 shadow-sm border border-gray-50 flex flex-col h-full">
       <div className="flex items-center gap-2 mb-6">
         <div className="bg-blue-50 p-2 rounded-full">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          {/* icon */}
         </div>
         <h3 className="font-bold text-gray-900 text-sm">Pump Status</h3>
       </div>
-      
+
       <div className="flex-1 flex justify-center items-center gap-3">
         <span className="text-sm text-gray-400 font-bold">Off</span>
-        <div className="w-14 h-8 bg-[#3CC15A] rounded-full relative p-1 cursor-pointer shadow-inner">
-          <div className="w-6 h-6 bg-white rounded-full absolute right-1 shadow-sm"></div>
+
+        <div className={`w-14 h-8 rounded-full relative p-1 cursor-pointer shadow-inner transition-all ${
+            isOn ? "bg-[#3CC15A]" : "bg-gray-300"
+          }`}
+        >
+          <div className={`w-6 h-6 bg-white rounded-full absolute shadow-sm transition-all ${
+              isOn ? "right-1" : "left-1"
+            }`}>
+          </div>
         </div>
         <span className="text-sm text-gray-900 font-bold">On</span>
       </div>
@@ -215,6 +225,20 @@ function PumpStatusCard() {
 }
 
 export default function DashboardPage() {
+  const [data, setData] = useState<any[]>([]);
+  const [latest, setLatest] = useState<any>(null);
+
+  useEffect(() => {
+    getLatestData().then((res) => {
+      setData(res);
+      setLatest(res[0]);
+    });
+  }, []);
+
+  if (!latest) {
+    return <div>Loading real-time data...</div>;
+  }
+
   return (
     <DashboardLayout>
       {/* Page Header */}
@@ -243,9 +267,9 @@ export default function DashboardPage() {
 
         {/* Bottom Row: 3 Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <SoilMoistureCard />
-          <TemperatureCard />
-          <PumpStatusCard />
+          <SoilMoistureCard value={latest?.soilMoisture || 0} />
+          <TemperatureCard temp={latest?.temperature || 0} />
+          <PumpStatusCard status={latest?.pumpStatus || "OFF"} />
         </div>
       </div>
       <div className="h-8"></div> {/* Bottom padding compensation */}
