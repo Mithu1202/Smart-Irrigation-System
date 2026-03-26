@@ -47,3 +47,6 @@ backend/.env
 # optional backend logs
 backend/logs/
 *.log
+
+# local nested app artifacts
+zonehub/
