@@ -2,22 +2,42 @@
 
 import Sidebar from "./Sidebar";
 import Header from "./Header";
+import { useState } from "react";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
-    <div className="min-h-screen p-6">
-      <div className="flex bg-white rounded-[22px] overflow-hidden shadow-2xl">
-        <Sidebar />
-
-        <div className="flex-1 bg-[#f5f6f8]">
-          <Header />
-          <div className="p-8">{children}</div>
+    <div className="min-h-screen bg-[#2D2D2D] sm:p-4 md:p-8 flex items-center justify-center font-sans tracking-tight">
+      <div className="w-full h-[100dvh] sm:h-[844px] max-w-[390px] bg-[#F4F5F4] sm:rounded-[40px] shadow-2xl overflow-hidden flex flex-col relative mx-auto">
+        {/* iOS Status Bar Mockup */}
+        <div className="px-6 py-3.5 flex justify-between items-center text-black font-semibold text-[15px] z-10 shrink-0 bg-[#F4F5F4]">
+          <span>9:41</span>
+          <div className="flex items-center gap-1.5">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor">
+              <path d="M1 9.5C1 8.67157 1.67157 8 2.5 8H3.5C4.32843 8 5 8.67157 5 9.5V11H1V9.5Z" />
+              <path d="M7 6.5C7 5.67157 7.67157 5 8.5 5H9.5C10.3284 5 11 5.67157 11 6.5V11H7V6.5Z" />
+              <path d="M13 3.5C13 2.67157 13.6715 2 14.5 2H15.5C16.3284 2 17 2.67157 17 3.5V11H13V3.5Z" />
+            </svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor">
+              <path d="M8 0C4.5 0 1.5 1.5 0 3L8 12L16 3C14.5 1.5 11.5 0 8 0Z" />
+            </svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor" strokeWidth="1">
+              <rect x="0.5" y="0.5" width="20" height="11" rx="2.5" />
+              <rect x="2" y="2" width="14" height="8" rx="1" fill="currentColor" />
+              <path d="M22 4V8" strokeLinecap="round" strokeWidth="2" />
+            </svg>
+          </div>
         </div>
+
+        <Header onOpenSidebar={() => setIsSidebarOpen(true)} />
+        
+        <div className="flex-1 overflow-y-auto px-5 pt-3 pb-8 hide-scrollbar relative z-0">
+          {children}
+        </div>
+
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       </div>
     </div>
   );
-}
+}

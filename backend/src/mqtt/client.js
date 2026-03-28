@@ -30,8 +30,9 @@ const client = mqtt.connect(process.env.MQTT_URL, {
 
 // --- ON CONNECT ---
 client.on("connect", () => {
-  console.log("✅ MQTT Connected");
+  console.log("✅ MQTT Connected to HiveMQ Cloud");
 
+  // Subscribe to sensor data topic
   client.subscribe("smart_irrigation/data", (err) => {
     if (err) {
       console.error("❌ Subscribe error:", err);
@@ -39,22 +40,28 @@ client.on("connect", () => {
       console.log("📡 Subscribed to topic: smart_irrigation/data");
     }
   });
+  
+  // Subscribe to pump status acknowledgment from ESP32
+  client.subscribe("smart_irrigation/pump_ack", (err) => {
+    if (err) {
+      console.error("❌ Subscribe error:", err);
+    } else {
+      console.log("📡 Subscribed to topic: smart_irrigation/pump_ack");
+    }
+  });
 });
 
 // --- PUBLISH PUMP COMMAND TO ESP32 ---
 const publishPumpCommand = (deviceId, pumpState) => {
-  const topic = `smart_irrigation/control/${deviceId}`;
-  const payload = JSON.stringify({
-    command: "pump",
-    state: pumpState ? "ON" : "OFF",
-    timestamp: new Date().toISOString(),
-  });
+  // ESP32 subscribes to "smart_irrigation/control" and expects simple "ON" or "OFF" message
+  const topic = "smart_irrigation/control";
+  const payload = pumpState ? "ON" : "OFF";
   
-  client.publish(topic, payload, { qos: 1 }, (err) => {
+  client.publish(topic, payload, { qos: 1, retain: false }, (err) => {
     if (err) {
       console.error("❌ Failed to publish pump command:", err);
     } else {
-      console.log(`📤 Pump command sent to ${deviceId}: ${pumpState ? "ON" : "OFF"}`);
+      console.log(`📤 Pump command sent to ${topic}: ${payload}`);
     }
   });
 };
