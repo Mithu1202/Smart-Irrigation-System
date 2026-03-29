@@ -149,52 +149,73 @@ function PumpStatusCard({ status }: { status: string }) {
   );
 }
 
-function CriticalAlertsCard({ alerts }: { alerts: any[] }) {
+function CriticalAlertsCard({ alerts }: { alerts: { title: string; desc: string; zone: string; time: string; type: string }[] }) {
+  const getAlertColor = (type: string) => {
+    switch (type) {
+      case "red": return { dot: "bg-red-500", badge: "bg-red-50 text-red-500" };
+      case "orange": return { dot: "bg-orange-500", badge: "bg-orange-50 text-orange-500" };
+      case "yellow": return { dot: "bg-yellow-500", badge: "bg-yellow-50 text-yellow-600" };
+      default: return { dot: "bg-gray-500", badge: "bg-gray-50 text-gray-500" };
+    }
+  };
+
   return (
-    <div className="bg-white rounded-[24px] p-5 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-gray-100/50 flex flex-col">
+    <div className="bg-white rounded-[24px] p-5 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-gray-100/50 flex flex-col h-full">
       <div className="flex items-center gap-3 mb-5">
         <div className="bg-red-50 w-8 h-8 rounded-full flex items-center justify-center">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17.5" r="1.5" fill="#EF4444" stroke="none"/></svg>
         </div>
         <h3 className="font-extrabold text-gray-900 text-[15px]">Critical Alerts</h3>
+        {alerts.length > 0 && (
+          <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+            {alerts.length}
+          </span>
+        )}
       </div>
       
-      <div className="space-y-4">
-        <div className="flex flex-col border-b border-gray-100 pb-4">
-          <div className="flex justify-between items-start mb-1.5">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <span className="font-bold text-gray-900 text-[13px]">Low Moisture Alert</span>
+      <div className="space-y-4 flex-1 overflow-y-auto max-h-[280px]">
+        {alerts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mb-3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
             </div>
-            <div className="text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 bg-red-50 text-red-500">
-              Zone A <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-            </div>
+            <p className="text-gray-500 text-[13px] font-medium">All systems normal</p>
+            <p className="text-gray-400 text-[11px]">No critical alerts</p>
           </div>
-          <div className="flex justify-between items-center text-[11px] text-gray-400 font-medium tracking-tight">
-            <span>Soil moisture dropped below<br/>threshold</span>
-            <span className="self-end">03:25 PM</span>
-          </div>
-        </div>
-        
-        <div className="flex flex-col border-b border-gray-100 pb-4">
-          <div className="flex justify-between items-start mb-1.5">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <span className="font-bold text-gray-900 text-[13px]">Pump Failure Risk</span>
-            </div>
-            <div className="text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 bg-red-50 text-red-500">
-              Zone B <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-            </div>
-          </div>
-          <div className="flex justify-between items-center text-[11px] text-gray-400 font-medium tracking-tight">
-            <span>Pressure irregularities detected</span>
-            <span className="self-end">08:25 PM</span>
-          </div>
-        </div>
+        ) : (
+          alerts.slice(0, 5).map((alert, index) => {
+            const colors = getAlertColor(alert.type);
+            return (
+              <div key={index} className="flex flex-col border-b border-gray-100 pb-4 last:border-b-0">
+                <div className="flex justify-between items-start mb-1.5">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${colors.dot}`} />
+                    <span className="font-bold text-gray-900 text-[13px]">{alert.title}</span>
+                  </div>
+                  <div className={`text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 ${colors.badge}`}>
+                    {alert.zone} <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center text-[11px] text-gray-400 font-medium tracking-tight">
+                  <span>{alert.desc}</span>
+                  <span className="self-end whitespace-nowrap ml-2">{alert.time}</span>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
-      <div className="mt-4 text-center">
-        <a href="#viewall" className="text-gray-400 text-[12px] font-bold underline underline-offset-2 hover:text-gray-600 transition">View All</a>
-      </div>
+      
+      {alerts.length > 0 && (
+        <div className="mt-4 text-center pt-2 border-t border-gray-100">
+          <Link href="/alerts" className="text-gray-400 text-[12px] font-bold underline underline-offset-2 hover:text-gray-600 transition">
+            View All ({alerts.length})
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
@@ -203,8 +224,19 @@ export default function DashboardPage() {
   const [zones, setZones] = useState<Zone[]>([]);
   const [selectedZone, setSelectedZone] = useState("default");
   const [loading, setLoading] = useState(true);
-  const { latestData, isConnected, alerts } = useSocket();
+  const { latestData, isConnected, alerts: rawAlerts } = useSocket();
   const [latest, setLatest] = useState<SensorData | null>(null);
+
+  // Transform alerts from backend format to UI format
+  const alerts = rawAlerts.map(alert => ({
+    title: alert.title,
+    desc: alert.message,
+    zone: alert.zone,
+    time: alert.timestamp 
+      ? new Date(alert.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true })
+      : new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true }),
+    type: alert.type === "critical" ? "red" : alert.type === "warning" ? "orange" : "yellow",
+  }));
 
   useEffect(() => {
     if (latestData) setLatest(latestData);

@@ -235,4 +235,234 @@ router.post("/seed", async (req, res) => {
   }
 });
 
+// ==================== REPORTS API ====================
+
+// Get weekly moisture trend data
+router.get("/reports/weekly-trend", async (req, res) => {
+  try {
+    const days = 7;
+    const trends = [];
+    
+    for (let i = days - 1; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      date.setHours(0, 0, 0, 0);
+      
+      const nextDate = new Date(date);
+      nextDate.setDate(nextDate.getDate() + 1);
+      
+      const dayData = await Data.find({
+        timestamp: { $gte: date, $lt: nextDate }
+      });
+      
+      const avgMoisture = dayData.length > 0 
+        ? Math.round(dayData.reduce((sum, d) => sum + (d.soilMoisture || 0), 0) / dayData.length)
+        : null;
+      
+      const avgTemp = dayData.length > 0
+        ? Math.round(dayData.reduce((sum, d) => sum + (d.temperature || 0), 0) / dayData.length * 10) / 10
+        : null;
+      
+      trends.push({
+        day: date.toLocaleDateString("en-US", { weekday: "short" }),
+        date: date.toISOString().split("T")[0],
+        moisture: avgMoisture,
+        temperature: avgTemp,
+        readings: dayData.length,
+      });
+    }
+    
+    // Calculate stats
+    const validMoisture = trends.filter(t => t.moisture !== null).map(t => t.moisture);
+    const stats = {
+      avg: validMoisture.length > 0 ? Math.round(validMoisture.reduce((a, b) => a + b, 0) / validMoisture.length) : 0,
+      max: validMoisture.length > 0 ? Math.max(...validMoisture) : 0,
+      min: validMoisture.length > 0 ? Math.min(...validMoisture) : 0,
+    };
+    
+    res.json({ trends, stats });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get irrigation history (pump events)
+router.get("/reports/irrigation-history", async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 20;
+    
+    // Get data where pump status changed or was active
+    const history = await Data.find({
+      pumpStatus: { $exists: true }
+    })
+      .sort({ timestamp: -1 })
+      .limit(limit * 2); // Get more to find transitions
+    
+    // Find pump state transitions
+    const events = [];
+    let lastPumpState = null;
+    
+    for (let i = history.length - 1; i >= 0; i--) {
+      const current = history[i];
+      const currentState = current.pumpStatus === "ON";
+      
+      if (lastPumpState !== null && lastPumpState !== currentState) {
+        events.push({
+          type: currentState ? "start" : "stop",
+          timestamp: current.timestamp,
+          zone: current.zone || "Zone A",
+          moisture: current.soilMoisture,
+          temperature: current.temperature,
+          trigger: currentState 
+            ? (current.soilMoisture < 30 ? "auto_low_moisture" : "manual")
+            : "manual",
+        });
+      }
+      lastPumpState = currentState;
+    }
+    
+    // Get total water usage estimate (based on pump ON duration)
+    const pumpOnReadings = history.filter(h => h.pumpStatus === "ON").length;
+    const estimatedWaterUsage = pumpOnReadings * 2; // ~2 liters per reading interval
+    
+    res.json({
+      events: events.reverse().slice(0, limit),
+      totalEvents: events.length,
+      estimatedWaterUsage,
+      pumpOnTime: pumpOnReadings * 2, // minutes (assuming 2 min intervals)
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get alerts history
+router.get("/reports/alerts", async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 50;
+    const thresholds = {
+      moistureLow: 25,
+      moistureHigh: 80,
+      tempHigh: 35,
+    };
+    
+    // Get recent data to find alert conditions
+    const recentData = await Data.find()
+      .sort({ timestamp: -1 })
+      .limit(limit * 3);
+    
+    const alerts = [];
+    
+    recentData.forEach(data => {
+      if (data.soilMoisture < thresholds.moistureLow) {
+        alerts.push({
+          type: "critical",
+          title: "Low Soil Moisture",
+          message: `Moisture dropped to ${data.soilMoisture}%`,
+          zone: data.zone || "Zone A",
+          value: data.soilMoisture,
+          threshold: thresholds.moistureLow,
+          timestamp: data.timestamp,
+        });
+      }
+      if (data.soilMoisture > thresholds.moistureHigh) {
+        alerts.push({
+          type: "warning",
+          title: "High Soil Moisture",
+          message: `Moisture reached ${data.soilMoisture}%`,
+          zone: data.zone || "Zone A",
+          value: data.soilMoisture,
+          threshold: thresholds.moistureHigh,
+          timestamp: data.timestamp,
+        });
+      }
+      if (data.temperature > thresholds.tempHigh) {
+        alerts.push({
+          type: "warning",
+          title: "High Temperature",
+          message: `Temperature reached ${data.temperature}°C`,
+          zone: data.zone || "Zone A",
+          value: data.temperature,
+          threshold: thresholds.tempHigh,
+          timestamp: data.timestamp,
+        });
+      }
+    });
+    
+    // Remove duplicates within 5 minute windows
+    const uniqueAlerts = [];
+    alerts.forEach(alert => {
+      const isDuplicate = uniqueAlerts.some(existing => 
+        existing.type === alert.type && 
+        existing.title === alert.title &&
+        Math.abs(new Date(existing.timestamp) - new Date(alert.timestamp)) < 5 * 60 * 1000
+      );
+      if (!isDuplicate) {
+        uniqueAlerts.push(alert);
+      }
+    });
+    
+    res.json({
+      alerts: uniqueAlerts.slice(0, limit),
+      total: uniqueAlerts.length,
+      summary: {
+        critical: uniqueAlerts.filter(a => a.type === "critical").length,
+        warning: uniqueAlerts.filter(a => a.type === "warning").length,
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get overall system stats for reports
+router.get("/reports/stats", async (req, res) => {
+  try {
+    const zones = await Zone.find();
+    const last24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    
+    const recentData = await Data.find({ timestamp: { $gte: last24h } });
+    
+    // Calculate averages
+    const avgMoisture = recentData.length > 0
+      ? Math.round(recentData.reduce((sum, d) => sum + (d.soilMoisture || 0), 0) / recentData.length)
+      : 0;
+    const avgTemp = recentData.length > 0
+      ? Math.round(recentData.reduce((sum, d) => sum + (d.temperature || 0), 0) / recentData.length * 10) / 10
+      : 0;
+    const avgHumidity = recentData.length > 0
+      ? Math.round(recentData.reduce((sum, d) => sum + (d.humidity || 0), 0) / recentData.length)
+      : 0;
+    
+    // Pump stats
+    const pumpOnCount = recentData.filter(d => d.pumpStatus === "ON").length;
+    const totalReadings = recentData.length;
+    const pumpOnPercentage = totalReadings > 0 ? Math.round((pumpOnCount / totalReadings) * 100) : 0;
+    
+    // Water savings estimate (compared to always-on irrigation)
+    const estimatedSavings = 100 - pumpOnPercentage;
+    
+    res.json({
+      zones: {
+        total: zones.length,
+        active: zones.filter(z => z.pumpActive).length,
+      },
+      last24h: {
+        readings: totalReadings,
+        avgMoisture,
+        avgTemp,
+        avgHumidity,
+        pumpOnTime: pumpOnCount * 2, // minutes
+        pumpOnPercentage,
+      },
+      savings: {
+        waterSaved: estimatedSavings,
+        estimatedLiters: Math.round((estimatedSavings / 100) * 200), // 200L baseline
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
