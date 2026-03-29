@@ -4,11 +4,16 @@ const mqtt = require("mqtt");
 const Data = require("../models/Data");
 const Zone = require("../models/Zone");
 
-// Convert raw ADC soil moisture to percentage (calibrate these values for your sensor)
-const convertSoilMoisture = (rawValue) => {
+// Convert soil moisture - handles both raw ADC (1500-4095) and normalized (0-100)
+const convertSoilMoisture = (value) => {
+  // If value is already normalized (0-100%), return as-is
+  if (value >= 0 && value <= 100) {
+    return Math.round(value);
+  }
+  // Otherwise, convert from raw ADC value
   const DRY_VALUE = 4095; // ADC value when completely dry
   const WET_VALUE = 1500; // ADC value when completely wet
-  const percentage = ((DRY_VALUE - rawValue) / (DRY_VALUE - WET_VALUE)) * 100;
+  const percentage = ((DRY_VALUE - value) / (DRY_VALUE - WET_VALUE)) * 100;
   return Math.max(0, Math.min(100, Math.round(percentage)));
 };
 
