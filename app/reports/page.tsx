@@ -2,7 +2,7 @@
 
 import DashboardLayout from "../components/layout/DashboardLayout";
 import { useEffect, useState, useCallback } from "react";
-import { getZones, getWeeklyTrend, getIrrigationHistory, getAlertsHistory, getReportStats, WeeklyTrend, IrrigationEvent, AlertData, ReportStats } from "../../lib/api";
+import { getZones, getWeeklyTrend, getIrrigationHistory, getAlertsHistory, getReportStats, IrrigationEvent, AlertData, ReportStats, ZoneTrendData } from "../../lib/api";
 import { useSocket } from "../../lib/useSocket";
 
 interface Zone {
@@ -199,33 +199,76 @@ function WaterSavingsCard({ stats }: { stats: ReportStats | null }) {
   );
 }
 
-function WeeklyTrendCard({ trends, stats }: { trends: WeeklyTrend[]; stats: { avg: number; max: number; min: number } }) {
-  const maxValue = Math.max(...trends.map(t => t.moisture || 0), 1);
+function ZoneWiseTrendCard({ zonesData }: { zonesData: ZoneTrendData[] }) {
+  const colors = ["#3CC15A", "#3B82F6", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899"];
+  
+  if (zonesData.length === 0) {
+    return (
+      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <h3 className="font-bold text-gray-900 text-[15px] mb-4">Weekly Moisture by Zone</h3>
+        <div className="text-center py-8 text-gray-400 text-[13px]">No zone data available</div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-      <h3 className="font-bold text-gray-900 text-[15px] mb-4">Weekly Moisture Trend</h3>
-      <div className="flex items-end justify-between gap-2 h-32">
-        {trends.map((trend, i) => (
-          <div key={i} className="flex-1 flex flex-col items-center gap-2">
-            <div className="w-full bg-gray-100 rounded-t-lg relative" style={{ height: "100%" }}>
-              {trend.moisture !== null ? (
-                <div 
-                  className="absolute bottom-0 left-0 right-0 bg-[#3CC15A] rounded-t-lg transition-all"
-                  style={{ height: `${(trend.moisture / maxValue) * 100}%` }}
-                />
-              ) : (
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-300 rounded" />
-              )}
-            </div>
-            <span className="text-[10px] font-semibold text-gray-400">{trend.day}</span>
+      <h3 className="font-bold text-gray-900 text-[15px] mb-4">Weekly Moisture by Zone</h3>
+      
+      {/* Zone Legend */}
+      <div className="flex flex-wrap gap-3 mb-4">
+        {zonesData.map((z, i) => (
+          <div key={z.zoneId} className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors[i % colors.length] }} />
+            <span className="text-[11px] font-semibold text-gray-600">{z.zone}</span>
+            <span className="text-[10px] text-gray-400">({z.stats.avg}% avg)</span>
           </div>
         ))}
       </div>
-      <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-[12px]">
-        <span className="text-gray-500">Avg: <strong className="text-gray-900">{stats.avg}%</strong></span>
-        <span className="text-gray-500">Best: <strong className="text-green-600">{stats.max}%</strong></span>
-        <span className="text-gray-500">Low: <strong className="text-red-500">{stats.min}%</strong></span>
+
+      {/* Bar Chart Grid */}
+      <div className="flex items-end justify-between gap-1 h-32">
+        {zonesData[0]?.trends.map((_, dayIdx) => (
+          <div key={dayIdx} className="flex-1 flex flex-col items-center gap-2">
+            <div className="w-full flex items-end justify-center gap-0.5 h-full">
+              {zonesData.map((zoneData, zoneIdx) => {
+                const moisture = zoneData.trends[dayIdx]?.moisture || 0;
+                const maxMoisture = Math.max(...zonesData.flatMap(z => z.trends.map(t => t.moisture || 0)), 1);
+                return (
+                  <div 
+                    key={zoneData.zoneId}
+                    className="rounded-t transition-all hover:opacity-80"
+                    style={{ 
+                      backgroundColor: colors[zoneIdx % colors.length],
+                      width: `${100 / zonesData.length - 2}%`,
+                      height: `${(moisture / maxMoisture) * 100}%`,
+                      minHeight: moisture > 0 ? "4px" : "0"
+                    }}
+                    title={`${zoneData.zone}: ${moisture}%`}
+                  />
+                );
+              })}
+            </div>
+            <span className="text-[9px] font-semibold text-gray-400">{zonesData[0]?.trends[dayIdx]?.day}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Zone Stats */}
+      <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 md:grid-cols-3 gap-3">
+        {zonesData.map((z, i) => (
+          <div key={z.zoneId} className="bg-gray-50 rounded-lg p-2">
+            <div className="flex items-center gap-1.5 mb-1">
+              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: colors[i % colors.length] }} />
+              <span className="text-[11px] font-bold text-gray-700">{z.zone}</span>
+            </div>
+            <div className="text-[10px] text-gray-500 space-x-2">
+              <span>Avg: <strong>{z.stats.avg}%</strong></span>
+              <span>Max: <strong className="text-green-600">{z.stats.max}%</strong></span>
+              <span>Min: <strong className="text-red-500">{z.stats.min}%</strong></span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -324,7 +367,7 @@ export default function ReportsPage() {
   const [loading, setLoading] = useState(true);
   const { latestData, isConnected } = useSocket();
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
-  const [weeklyTrend, setWeeklyTrend] = useState<{ trends: WeeklyTrend[]; stats: { avg: number; max: number; min: number } }>({ trends: [], stats: { avg: 0, max: 0, min: 0 } });
+  const [zoneTrends, setZoneTrends] = useState<ZoneTrendData[]>([]);
   const [irrigationHistory, setIrrigationHistory] = useState<IrrigationEvent[]>([]);
   const [alertsHistory, setAlertsHistory] = useState<AlertData[]>([]);
   const [stats, setStats] = useState<ReportStats | null>(null);
@@ -333,14 +376,14 @@ export default function ReportsPage() {
     try {
       const [zonesRes, trendRes, historyRes, alertsRes, statsRes] = await Promise.all([
         getZones().catch(() => []),
-        getWeeklyTrend().catch(() => ({ trends: [], stats: { avg: 0, max: 0, min: 0 } })),
+        getWeeklyTrend().catch(() => ({ zones: [] })),
         getIrrigationHistory(20).catch(() => ({ events: [] })),
         getAlertsHistory(50).catch(() => ({ alerts: [] })),
         getReportStats().catch(() => null),
       ]);
       
       setZones(zonesRes);
-      setWeeklyTrend(trendRes);
+      setZoneTrends(trendRes.zones || []);
       setIrrigationHistory(historyRes.events || []);
       setAlertsHistory(alertsRes.alerts || []);
       setStats(statsRes);
@@ -454,9 +497,13 @@ export default function ReportsPage() {
         </div>
       </div>
 
+      {/* Zone-Wise Trend Chart - Full Width */}
+      <div className="mb-6">
+        <ZoneWiseTrendCard zonesData={zoneTrends} />
+      </div>
+
       {/* Charts Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <WeeklyTrendCard trends={weeklyTrend.trends} stats={weeklyTrend.stats} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <IrrigationHistoryCard events={irrigationHistory} />
         <AlertsHistoryCard alerts={alertsHistory} />
       </div>

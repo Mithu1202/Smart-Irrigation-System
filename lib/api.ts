@@ -99,8 +99,23 @@ export const seedZones = async () => {
 
 // ==================== REPORTS API ====================
 
-export const getWeeklyTrend = async (): Promise<{ trends: WeeklyTrend[]; stats: { avg: number; max: number; min: number } }> => {
-  const res = await api.get("/zones/reports/weekly-trend");
+export interface ZoneTrendData {
+  zone: string;
+  zoneId: string;
+  trends: { day: string; moisture: number | null }[];
+  stats: { avg: number; max: number; min: number };
+}
+
+export const getWeeklyTrend = async (zone?: string): Promise<{ 
+  trends?: WeeklyTrend[]; 
+  stats?: { avg: number; max: number; min: number };
+  zones?: ZoneTrendData[];
+  zone?: string;
+}> => {
+  const url = zone 
+    ? `/zones/reports/weekly-trend?zone=${encodeURIComponent(zone)}`
+    : "/zones/reports/weekly-trend";
+  const res = await api.get(url);
   return res.data;
 };
 

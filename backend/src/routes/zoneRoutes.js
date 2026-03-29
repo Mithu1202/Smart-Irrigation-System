@@ -237,56 +237,100 @@ router.post("/seed", async (req, res) => {
 
 // ==================== REPORTS API ====================
 
-// Get weekly moisture trend data
+// Get weekly moisture trend data (supports ?zone= filter or returns all zones)
 router.get("/reports/weekly-trend", async (req, res) => {
   try {
     const days = 7;
-    const trends = [];
+    const zoneFilter = req.query.zone;
     
-    for (let i = days - 1; i >= 0; i--) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      date.setHours(0, 0, 0, 0);
+    // Get all zones for zone-wise report
+    const zones = await Zone.find().sort({ zoneId: 1 });
+    
+    if (zoneFilter) {
+      // Single zone trend
+      const trends = [];
+      for (let i = days - 1; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        date.setHours(0, 0, 0, 0);
+        
+        const nextDate = new Date(date);
+        nextDate.setDate(nextDate.getDate() + 1);
+        
+        const dayData = await Data.find({
+          zone: zoneFilter,
+          timestamp: { $gte: date, $lt: nextDate }
+        });
+        
+        const avgMoisture = dayData.length > 0 
+          ? Math.round(dayData.reduce((sum, d) => sum + (d.soilMoisture || 0), 0) / dayData.length)
+          : null;
+        
+        trends.push({
+          day: date.toLocaleDateString("en-US", { weekday: "short" }),
+          date: date.toISOString().split("T")[0],
+          moisture: avgMoisture,
+          readings: dayData.length,
+        });
+      }
       
-      const nextDate = new Date(date);
-      nextDate.setDate(nextDate.getDate() + 1);
+      const validMoisture = trends.filter(t => t.moisture !== null).map(t => t.moisture);
+      const stats = {
+        avg: validMoisture.length > 0 ? Math.round(validMoisture.reduce((a, b) => a + b, 0) / validMoisture.length) : 0,
+        max: validMoisture.length > 0 ? Math.max(...validMoisture) : 0,
+        min: validMoisture.length > 0 ? Math.min(...validMoisture) : 0,
+      };
       
-      const dayData = await Data.find({
-        timestamp: { $gte: date, $lt: nextDate }
-      });
-      
-      const avgMoisture = dayData.length > 0 
-        ? Math.round(dayData.reduce((sum, d) => sum + (d.soilMoisture || 0), 0) / dayData.length)
-        : null;
-      
-      const avgTemp = dayData.length > 0
-        ? Math.round(dayData.reduce((sum, d) => sum + (d.temperature || 0), 0) / dayData.length * 10) / 10
-        : null;
-      
-      trends.push({
-        day: date.toLocaleDateString("en-US", { weekday: "short" }),
-        date: date.toISOString().split("T")[0],
-        moisture: avgMoisture,
-        temperature: avgTemp,
-        readings: dayData.length,
-      });
+      return res.json({ trends, stats, zone: zoneFilter });
     }
     
-    // Calculate stats
-    const validMoisture = trends.filter(t => t.moisture !== null).map(t => t.moisture);
-    const stats = {
-      avg: validMoisture.length > 0 ? Math.round(validMoisture.reduce((a, b) => a + b, 0) / validMoisture.length) : 0,
-      max: validMoisture.length > 0 ? Math.max(...validMoisture) : 0,
-      min: validMoisture.length > 0 ? Math.min(...validMoisture) : 0,
-    };
+    // All zones - return zone-wise data
+    const zoneData = await Promise.all(zones.map(async (zone) => {
+      const trends = [];
+      for (let i = days - 1; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        date.setHours(0, 0, 0, 0);
+        
+        const nextDate = new Date(date);
+        nextDate.setDate(nextDate.getDate() + 1);
+        
+        const dayData = await Data.find({
+          zone: zone.name,
+          timestamp: { $gte: date, $lt: nextDate }
+        });
+        
+        const avgMoisture = dayData.length > 0 
+          ? Math.round(dayData.reduce((sum, d) => sum + (d.soilMoisture || 0), 0) / dayData.length)
+          : null;
+        
+        trends.push({
+          day: date.toLocaleDateString("en-US", { weekday: "short" }),
+          moisture: avgMoisture,
+        });
+      }
+      
+      const validMoisture = trends.filter(t => t.moisture !== null).map(t => t.moisture);
+      
+      return {
+        zone: zone.name,
+        zoneId: zone.zoneId,
+        trends,
+        stats: {
+          avg: validMoisture.length > 0 ? Math.round(validMoisture.reduce((a, b) => a + b, 0) / validMoisture.length) : 0,
+          max: validMoisture.length > 0 ? Math.max(...validMoisture) : 0,
+          min: validMoisture.length > 0 ? Math.min(...validMoisture) : 0,
+        }
+      };
+    }));
     
-    res.json({ trends, stats });
+    res.json({ zones: zoneData });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Get irrigation history (pump events)
+// Get irrigation history (pump events) - supports ?zone= filter
 router.get("/reports/irrigation-history", async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 20;
