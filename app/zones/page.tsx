@@ -128,42 +128,42 @@ function ZoneDetailsModal({ zone, onClose, onTogglePump }: { zone: Zone; onClose
   if (zone.status === "Wet" || zone.status === "Good") badgeClass = "bg-[#EEFBF2] text-[#3CC15A]";
 
   return (
-    <div className="absolute inset-0 z-50 flex flex-col items-center justify-end bg-black/40 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/40 backdrop-blur-sm md:p-6" onClick={onClose}>
       <div 
-        className="w-full h-[90%] bg-white rounded-t-[32px] shadow-2xl overflow-y-auto flex flex-col hide-scrollbar relative transform" 
+        className="w-full md:w-[600px] lg:w-[700px] h-[90%] md:h-auto md:max-h-[90vh] bg-white rounded-t-[32px] md:rounded-[32px] shadow-2xl overflow-y-auto flex flex-col hide-scrollbar relative transform" 
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex justify-center pt-3 pb-2 w-full sticky top-0 bg-white/95 backdrop-blur z-20">
+        <div className="flex justify-center pt-3 pb-2 w-full sticky top-0 bg-white/95 backdrop-blur z-20 md:hidden">
           <div className="w-12 h-1.5 bg-gray-200 rounded-full"></div>
         </div>
         
-        <div className="px-6 pb-2 border-b border-gray-100 flex justify-between items-center sticky top-[28px] bg-white/95 backdrop-blur z-20">
+        <div className="px-6 py-4 md:py-6 border-b border-gray-100 flex justify-between items-center sticky md:static top-[28px] bg-white/95 backdrop-blur z-20">
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-extrabold text-gray-900 tracking-tight">{zone.name}</h2>
+            <h2 className="text-xl md:text-2xl font-extrabold text-gray-900 tracking-tight">{zone.name}</h2>
             <span className={`px-2.5 py-1 rounded-[8px] text-[11px] font-extrabold tracking-tight ${badgeClass}`}>{zone.status}</span>
           </div>
-          <button onClick={onClose} className="p-1.5 text-gray-400 focus:outline-none bg-gray-50 rounded-full">
+          <button onClick={onClose} className="p-1.5 text-gray-400 focus:outline-none hover:bg-gray-100 bg-gray-50 rounded-full transition-colors">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
 
         <div className="p-6 pt-4 space-y-6">
           {/* Detailed content */}
-          <div className="grid grid-cols-2 gap-4 text-[13px] tracking-tight text-gray-900 font-medium">
+          <div className="grid grid-cols-2 gap-4 text-[13px] md:text-sm tracking-tight text-gray-900 font-medium">
             <div className="bg-gray-50 p-4 rounded-[16px]">
               <p className="text-gray-400 font-bold mb-1">Crop Type</p>
-              <p className="font-extrabold text-[15px]">{zone.crop}</p>
+              <p className="font-extrabold text-[15px] md:text-lg">{zone.crop}</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-[16px]">
               <p className="text-gray-400 font-bold mb-1">Area Size</p>
-              <p className="font-extrabold text-[15px]">{zone.area}</p>
+              <p className="font-extrabold text-[15px] md:text-lg">{zone.area}</p>
             </div>
           </div>
 
           {/* Moisture Chart Panel */}
           <div className="bg-white border text-gray-900 border-gray-100 rounded-[20px] p-4 shadow-sm">
-            <p className="text-[13px] font-extrabold mb-3">Moisture History</p>
-            <div className="h-40">
+            <p className="text-[13px] md:text-sm font-extrabold mb-3">Moisture History</p>
+            <div className="h-40 md:h-56">
               {loadingHistory ? (
                 <div className="h-full flex items-center justify-center text-gray-400 text-xs">Loading...</div>
               ) : historyData.length > 0 ? (
@@ -188,10 +188,10 @@ function ZoneDetailsModal({ zone, onClose, onTogglePump }: { zone: Zone; onClose
           </div>
 
           {/* Controls Footer */}
-          <div className="pb-10 pt-2">
+          <div className="pb-10 md:pb-4 pt-2">
             <button
                onClick={() => onTogglePump(zone.zoneId)}
-               className={`w-full py-4 rounded-[16px] text-[15px] font-extrabold shadow-sm transition-colors text-white ${
+               className={`w-full py-4 rounded-[16px] text-[15px] md:text-lg font-extrabold shadow-sm transition-colors text-white ${
                  zone.pumpActive ? "bg-red-500 hover:bg-red-600" : "bg-[#3CC15A] hover:bg-[#34A853]"
                }`}
              >
@@ -303,7 +303,7 @@ export default function ZonesPage() {
   return (
     <DashboardLayout>
       {/* Search Bar */}
-      <div className="mb-6 mt-2 relative">
+      <div className="mb-6 mt-2 relative md:max-w-md">
         <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </div>
@@ -319,10 +319,12 @@ export default function ZonesPage() {
         </div>
       </div>
 
-      <h1 className="text-[20px] font-extrabold text-gray-900 tracking-tight mb-4">Zones Overview</h1>
+      <div className="flex items-center justify-between mb-4 md:mb-6">
+        <h1 className="text-[20px] md:text-2xl font-extrabold text-gray-900 tracking-tight">Zones Overview</h1>
+      </div>
 
       {/* Grid of Zones */}
-      <div className="flex flex-col">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {sortedZones.map((zone) => (
           <ZoneCardDetailed 
             key={zone.zoneId} 

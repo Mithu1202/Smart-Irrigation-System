@@ -245,12 +245,32 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <ZoneSelectorCard zones={zones} selectedZone={selectedZone} onZoneSelect={setSelectedZone} />
-        <SoilMoistureCard value={latest?.soilMoisture || 75} />
-        <TemperatureCard temp={latest?.temperature || 0} />
-        <PumpStatusCard status={latest?.pumpStatus || "OFF"} />
-        <CriticalAlertsCard alerts={alerts} />
+      <div className="flex flex-col gap-4 md:gap-6">
+        {/* Top Row: Zone Selector & Alerts */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
+          <div className="lg:col-span-8 xl:col-span-9 flex flex-col h-full">
+            <div className="flex-1 h-full min-h-[400px]">
+              <ZoneSelectorCard zones={zones} selectedZone={selectedZone} onZoneSelect={setSelectedZone} />
+            </div>
+          </div>
+          <div className="lg:col-span-4 xl:col-span-3 hidden lg:flex flex-col h-full">
+            <div className="flex-1 h-full w-full">
+              <CriticalAlertsCard alerts={alerts} />
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Row: 3 Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <SoilMoistureCard value={latest?.soilMoisture || 75} />
+          <TemperatureCard temp={latest?.temperature || 0} />
+          <PumpStatusCard status={latest?.pumpStatus || "OFF"} />
+        </div>
+        
+        {/* Mobile-only Alerts (Moves below metrics on smaller screens) */}
+        <div className="lg:hidden block">
+          <CriticalAlertsCard alerts={alerts} />
+        </div>
       </div>
       
       <div className="py-4 flex justify-center">
