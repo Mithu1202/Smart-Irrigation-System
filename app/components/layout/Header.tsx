@@ -1,8 +1,8 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ThemeToggle } from "../ThemeToggle";
+import { useState, useEffect, useRef } from "react";
 
 export default function Header({ 
   onOpenSidebar, 
@@ -12,9 +12,108 @@ export default function Header({
   isDesktop?: boolean;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const pathParts = pathname.split("/").filter(Boolean);
   const currentPage = pathParts.length > 0 ? pathParts[pathParts.length - 1] : "";
   const titleText = currentPage ? currentPage.charAt(0).toUpperCase() + currentPage.slice(1) : "Dashboard";
+
+  const [user, setUser] = useState<{name: string, handle: string} | null>(null);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+  const notifMenuRef = useRef<HTMLDivElement>(null);
+
+  // Load user from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("user");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Support both old format (name) and new backend format (fullName)
+        const displayName = parsed.fullName || parsed.name || "Smart Farmer";
+        const displayHandle = parsed.handle || "@" + displayName.split(" ")[0].toLowerCase();
+        setUser({ name: displayName, handle: displayHandle });
+      } catch (e) {}
+    } else {
+      setUser({ name: "Smart Farmer", handle: "@farmer" });
+    }
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setShowProfileMenu(false);
+      }
+      if (notifMenuRef.current && !notifMenuRef.current.contains(event.target as Node)) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    router.push("/login");
+  };
+
+  const dummyNotifications = [
+    { id: 1, title: "Pump 1 Started", time: "2 mins ago", type: "info" },
+    { id: 2, title: "Low Moisture in Zone A", time: "1 hr ago", type: "warning" },
+    { id: 3, title: "System Offline", time: "5 hrs ago", type: "critical" },
+    { id: 4, title: "Weekly Report Ready", time: "1 day ago", type: "info" },
+  ];
+
+  const unreadCount = dummyNotifications.length;
+
+  const getProfileImage = () => {
+    const name = user?.name || "SF";
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3CC15A&color=fff&bold=true`;
+  };
+
+  const NotificationDropdown = () => (
+    <div className="absolute right-0 top-12 w-80 bg-white dark:bg-slate-800 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 dark:border-slate-700 overflow-hidden z-50">
+      <div className="p-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-800/50">
+        <h4 className="font-bold text-gray-900 dark:text-gray-100">Notifications</h4>
+        <span className="text-xs font-semibold bg-[#3CC15A] text-white px-2 py-0.5 rounded-full">{unreadCount} New</span>
+      </div>
+      <div className="max-h-80 overflow-y-auto">
+        {dummyNotifications.map(n => (
+          <div key={n.id} className="p-4 border-b border-gray-50 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition cursor-pointer flex gap-3">
+            <div className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${n.type === 'critical' ? 'bg-[#E74C3C]' : n.type === 'warning' ? 'bg-[#F39C12]' : 'bg-[#3CC15A]'}`} />
+            <div>
+              <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{n.title}</p>
+              <p className="text-xs text-gray-400 mt-1">{n.time}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <Link href="/alerts" className="block text-center p-3 text-sm font-semibold text-[#3CC15A] hover:bg-[#3CC15A]/10 transition">
+        View All Alerts
+      </Link>
+    </div>
+  );
+
+  const ProfileDropdown = () => (
+    <div className="absolute right-0 top-14 w-56 bg-white dark:bg-slate-800 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 dark:border-slate-700 overflow-hidden z-50 py-1.5">
+      <div className="px-4 py-3 border-b border-gray-100 dark:border-slate-700 mb-1">
+        <p className="text-sm font-bold text-gray-900 dark:text-gray-100">{user?.name}</p>
+        <p className="text-xs font-medium text-gray-500">{user?.handle}</p>
+      </div>
+      <Link href="/settings" className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
+        <svg className="w-4 h-4 mr-3 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+        Account Settings
+      </Link>
+      <Link href="/help" className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
+        <svg className="w-4 h-4 mr-3 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Help & Center
+      </Link>
+      <div className="h-px bg-gray-100 dark:bg-slate-700 my-1"></div>
+      <button onClick={handleLogout} className="w-full text-left flex items-center px-4 py-2.5 text-sm font-semibold text-[#E74C3C] hover:bg-[#E74C3C]/10 transition">
+        <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </div>
+  );
 
   if (isDesktop) {
     return (
@@ -43,23 +142,37 @@ export default function Header({
           <ThemeToggle variant="icon" />
 
           {/* Notifications */}
-          <button className="relative bg-[#f0f1f4] dark:bg-slate-700 p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-600 transition">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            <span className="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 bg-[#E74C3C] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#f5f6f8] dark:border-slate-800">
-              4
-            </span>
-          </button>
+          <div className="relative" ref={notifMenuRef}>
+            <button 
+              onClick={() => setShowNotifications(!showNotifications)}
+              className="relative bg-[#f0f1f4] dark:bg-slate-700 p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-600 transition"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              {unreadCount > 0 && (
+                <span className="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 bg-[#E74C3C] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#f5f6f8] dark:border-slate-800">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+            {showNotifications && <NotificationDropdown />}
+          </div>
 
           {/* User Profile */}
-          <div className="flex items-center cursor-pointer bg-white dark:bg-slate-700 border border-gray-100 dark:border-slate-600 p-1.5 pr-3 rounded-[14px] hover:shadow-sm dark:hover:shadow-md transition gap-3">
-            <div className="w-9 h-9 bg-gray-300 rounded-[10px] overflow-hidden">
-              <img src="https://ui-avatars.com/api/?name=Mithu+FT&background=random" alt="User" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-bold text-gray-900 dark:text-gray-100 leading-tight">Mithu FT</span>
-              <span className="text-xs font-medium text-gray-400 dark:text-gray-500">@mithuu</span>
-            </div>
-            <svg className="ml-2 text-gray-400 dark:text-gray-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          <div className="relative" ref={profileMenuRef}>
+            <button 
+              onClick={() => setShowProfileMenu(!showProfileMenu)}
+              className="flex items-center bg-white dark:bg-slate-700 border border-gray-100 dark:border-slate-600 p-1.5 pr-3 rounded-[14px] hover:shadow-sm dark:hover:shadow-md transition gap-3 focus:outline-none"
+            >
+              <div className="w-9 h-9 bg-gray-300 rounded-[10px] overflow-hidden">
+                <img src={getProfileImage()} alt="User" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-sm font-bold text-gray-900 dark:text-gray-100 leading-tight">{user?.name || "Loading..."}</span>
+                <span className="text-xs font-medium text-gray-400 dark:text-gray-500">{user?.handle || "@user"}</span>
+              </div>
+              <svg className={`ml-2 text-gray-400 dark:text-gray-500 transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+            {showProfileMenu && <ProfileDropdown />}
           </div>
         </div>
       </header>
@@ -90,18 +203,69 @@ export default function Header({
       <div className="flex items-center gap-4">
         <ThemeToggle variant="icon" />
 
-        <button className="relative text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none transition-colors">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-          </svg>
-          <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-[#F4F5F4] dark:border-slate-800 rounded-full flex items-center justify-center">
-            <span className="text-[6px] text-white font-bold leading-none select-none -translate-x-px">2</span>
-          </div>
-        </button>
+        <div className="relative" ref={notifMenuRef}>
+            <button 
+              onClick={() => setShowNotifications(!showNotifications)}
+              className="relative text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none transition-colors mt-1"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              {unreadCount > 0 && (
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border border-[#F4F5F4] dark:border-slate-800 rounded-full flex items-center justify-center">
+                  <span className="text-[7px] text-white font-bold leading-none select-none">{unreadCount}</span>
+                </div>
+              )}
+            </button>
+            {showNotifications && (
+               <div className="fixed left-5 right-5 top-16 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-700 overflow-hidden z-50">
+                 <div className="p-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-800/50">
+                   <h4 className="font-bold text-gray-900 dark:text-gray-100">Notifications</h4>
+                   <span className="text-xs font-semibold bg-[#3CC15A] text-white px-2 py-0.5 rounded-full">{unreadCount} New</span>
+                 </div>
+                 <div className="max-h-80 overflow-y-auto">
+                   {dummyNotifications.map(n => (
+                     <div key={n.id} className="p-3.5 border-b border-gray-50 dark:border-slate-700/50 flex gap-3">
+                       <div className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${n.type === 'critical' ? 'bg-[#E74C3C]' : n.type === 'warning' ? 'bg-[#F39C12]' : 'bg-[#3CC15A]'}`} />
+                       <div>
+                         <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 leading-snug">{n.title}</p>
+                         <p className="text-xs text-gray-400 mt-0.5">{n.time}</p>
+                       </div>
+                     </div>
+                   ))}
+                 </div>
+                 <Link href="/alerts" className="block text-center p-3 text-sm font-semibold text-[#3CC15A] bg-white dark:bg-slate-800">
+                   View All Alerts
+                 </Link>
+               </div>
+            )}
+        </div>
 
-        <div className="w-8 h-8 rounded-full overflow-hidden shadow-sm cursor-pointer border border-[#F4F5F4] dark:border-slate-700">
-          <img src="https://ui-avatars.com/api/?name=Mithu+FT&background=random" alt="User" className="w-full h-full object-cover" />
+        <div className="relative" ref={profileMenuRef}>
+            <button 
+              onClick={() => setShowProfileMenu(!showProfileMenu)}
+              className="w-8 h-8 rounded-full overflow-hidden shadow-sm cursor-pointer border border-[#F4F5F4] dark:border-slate-700 focus:outline-none"
+            >
+              <img src={getProfileImage()} alt="User" className="w-full h-full object-cover" />
+            </button>
+            {showProfileMenu && (
+              <div className="fixed right-5 top-16 w-56 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-700 overflow-hidden z-50 py-1.5">
+                <div className="px-4 py-3 border-b border-gray-100 dark:border-slate-700 mb-1">
+                  <p className="text-sm font-bold text-gray-900 dark:text-gray-100">{user?.name}</p>
+                  <p className="text-xs font-medium text-gray-500">{user?.handle}</p>
+                </div>
+                <Link href="/settings" className="flex items-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <svg className="w-4 h-4 mr-3 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+                  Account Settings
+                </Link>
+                <div className="h-px bg-gray-100 dark:bg-slate-700 my-1"></div>
+                <button onClick={handleLogout} className="w-full text-left flex items-center px-4 py-3 text-sm font-semibold text-[#E74C3C]">
+                  <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  Logout
+                </button>
+              </div>
+            )}
         </div>
       </div>
     </header>

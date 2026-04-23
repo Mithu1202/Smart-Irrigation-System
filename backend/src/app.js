@@ -14,6 +14,7 @@ const dataRoutes = require("./routes/dataRoutes");
 const zoneRoutes = require("./routes/zoneRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
 const agentRoutes = require("./routes/agentRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use("/api/data", dataRoutes);
 app.use("/api/zones", zoneRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/agent", agentRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
   res.send("Backend running");
