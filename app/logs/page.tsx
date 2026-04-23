@@ -10,9 +10,9 @@ function LogCard({ event }: { event: IrrigationEvent }) {
   const date = new Date(event.timestamp);
   
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md transition-all">
       <div className="flex items-start gap-4">
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${isStart ? "bg-green-100" : "bg-red-100"}`}>
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${isStart ? "bg-green-100 dark:bg-green-900/40" : "bg-red-100 dark:bg-red-900/40"}`}>
           {isStart ? (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           ) : (
@@ -21,13 +21,13 @@ function LogCard({ event }: { event: IrrigationEvent }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
-            <h3 className="font-bold text-gray-900 text-[15px]">
+            <h3 className="font-bold text-gray-900 dark:text-gray-100 text-[15px]">
               Pump {isStart ? "Started" : "Stopped"}
             </h3>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isStart ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isStart ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"}`}>
               {event.zone}
             </span>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${event.trigger === "manual" ? "bg-blue-100 text-blue-700" : "bg-purple-100 text-purple-700"}`}>
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${event.trigger === "manual" ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400" : "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400"}`}>
               {event.trigger === "manual" ? "Manual" : "Auto"}
             </span>
           </div>
@@ -39,7 +39,7 @@ function LogCard({ event }: { event: IrrigationEvent }) {
           </p>
         </div>
         <div className="text-right shrink-0">
-          <div className="text-[14px] font-bold text-gray-900">
+          <div className="text-[14px] font-bold text-gray-900 dark:text-gray-100">
             {date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true })}
           </div>
           <div className="text-[11px] text-gray-400">
@@ -53,11 +53,11 @@ function LogCard({ event }: { event: IrrigationEvent }) {
 
 function StatsCard({ title, value, subtitle, icon, color }: { title: string; value: string | number; subtitle: string; icon: React.ReactNode; color: string }) {
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700">
       <div className="flex items-center gap-3 mb-3">
         <div className={`${color} w-10 h-10 rounded-xl flex items-center justify-center`}>{icon}</div>
       </div>
-      <div className="text-[28px] font-extrabold text-gray-900 tracking-tight">{value}</div>
+      <div className="text-[28px] font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">{value}</div>
       <div className="text-[13px] font-semibold text-gray-500 mt-1">{title}</div>
       <div className="text-[11px] text-gray-400">{subtitle}</div>
     </div>
@@ -110,7 +110,7 @@ export default function LogsPage() {
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-1.5">
-          <h1 className="text-[20px] font-extrabold text-gray-900 tracking-tight">Irrigation Logs</h1>
+          <h1 className="text-[20px] font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">Irrigation Logs</h1>
           <div className="flex items-center gap-1.5">
             <div className={`w-1.5 h-1.5 rounded-full ${isConnected ? "bg-[#3CC15A]" : "bg-gray-400"}`}></div>
             <span className={`text-[10px] font-bold ${isConnected ? "text-[#3CC15A]" : "text-gray-400"}`}>
@@ -168,7 +168,7 @@ export default function LogsPage() {
             className={`px-4 py-2 rounded-xl text-[13px] font-semibold transition-all ${
               filter === tab.key 
                 ? "bg-[#3CC15A] text-white shadow-sm" 
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700"
             }`}
           >
             {tab.label}
@@ -179,11 +179,11 @@ export default function LogsPage() {
       {/* Events List */}
       <div className="space-y-3">
         {filteredEvents.length === 0 ? (
-          <div className="bg-gray-50 rounded-2xl p-12 text-center">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="bg-gray-50 dark:bg-slate-800/50 rounded-2xl p-12 text-center">
+            <div className="w-16 h-16 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
             </div>
-            <h3 className="font-bold text-gray-700 mb-2">No Irrigation Events</h3>
+            <h3 className="font-bold text-gray-700 dark:text-gray-200 mb-2">No Irrigation Events</h3>
             <p className="text-gray-400 text-[13px]">Pump activity will appear here when irrigation events occur.</p>
           </div>
         ) : (

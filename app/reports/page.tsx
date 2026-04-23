@@ -102,10 +102,10 @@ function generateRecommendations(zones: Zone[], latestData: any): Recommendation
 
 function RecommendationCard({ rec }: { rec: Recommendation }) {
   const colors = {
-    success: { bg: "bg-green-50", border: "border-green-200", icon: "text-green-500", badge: "bg-green-100 text-green-700" },
-    warning: { bg: "bg-amber-50", border: "border-amber-200", icon: "text-amber-500", badge: "bg-amber-100 text-amber-700" },
-    danger: { bg: "bg-red-50", border: "border-red-200", icon: "text-red-500", badge: "bg-red-100 text-red-700" },
-    info: { bg: "bg-blue-50", border: "border-blue-200", icon: "text-blue-500", badge: "bg-blue-100 text-blue-700" },
+    success: { bg: "bg-green-50 dark:bg-green-900/10", border: "border-green-200 dark:border-green-900/50", icon: "text-green-500", badge: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" },
+    warning: { bg: "bg-amber-50 dark:bg-amber-900/10", border: "border-amber-200 dark:border-amber-900/50", icon: "text-amber-500", badge: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" },
+    danger: { bg: "bg-red-50 dark:bg-red-900/10", border: "border-red-200 dark:border-red-900/50", icon: "text-red-500", badge: "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400" },
+    info: { bg: "bg-blue-50 dark:bg-blue-900/10", border: "border-blue-200 dark:border-blue-900/50", icon: "text-blue-500", badge: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400" },
   };
   const c = colors[rec.type];
 
@@ -122,16 +122,16 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
         <div className={`${c.icon} shrink-0 mt-0.5`}>{icons[rec.type]}</div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
-            <h3 className="font-bold text-gray-900 text-[15px]">{rec.title}</h3>
+            <h3 className="font-bold text-gray-900 dark:text-gray-100 text-[15px]">{rec.title}</h3>
             {rec.zone && (
               <span className={`${c.badge} text-[10px] font-bold px-2 py-0.5 rounded-full`}>{rec.zone}</span>
             )}
           </div>
-          <p className="text-gray-600 text-[13px] mb-3">{rec.description}</p>
+          <p className="text-gray-600 dark:text-gray-300 text-[13px] mb-3">{rec.description}</p>
           {rec.action && (
             <div className="flex items-center gap-2">
               <span className="text-[12px] font-semibold text-gray-500">Suggested Action:</span>
-              <span className="text-[12px] font-bold text-gray-800">{rec.action}</span>
+              <span className="text-[12px] font-bold text-gray-800 dark:text-gray-200">{rec.action}</span>
             </div>
           )}
         </div>
@@ -142,12 +142,12 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
 
 function SummaryCard({ title, value, subtitle, icon, color }: { title: string; value: string | number; subtitle: string; icon: React.ReactNode; color: string }) {
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700">
       <div className="flex items-center gap-3 mb-3">
         <div className={`${color} w-10 h-10 rounded-xl flex items-center justify-center`}>{icon}</div>
         <span className="text-[13px] font-semibold text-gray-500">{title}</span>
       </div>
-      <div className="text-[28px] font-extrabold text-gray-900 tracking-tight">{value}</div>
+      <div className="text-[28px] font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">{value}</div>
       <div className="text-[12px] text-gray-400 mt-1">{subtitle}</div>
     </div>
   );
@@ -204,16 +204,16 @@ function ZoneWiseTrendCard({ zonesData }: { zonesData: ZoneTrendData[] }) {
   
   if (zonesData.length === 0) {
     return (
-      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-        <h3 className="font-bold text-gray-900 text-[15px] mb-4">Weekly Moisture by Zone</h3>
+      <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700">
+        <h3 className="font-bold text-gray-900 dark:text-gray-100 text-[15px] mb-4">Weekly Moisture by Zone</h3>
         <div className="text-center py-8 text-gray-400 text-[13px]">No zone data available</div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-      <h3 className="font-bold text-gray-900 text-[15px] mb-4">Weekly Moisture by Zone</h3>
+    <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700">
+      <h3 className="font-bold text-gray-900 dark:text-gray-100 text-[15px] mb-4">Weekly Moisture by Zone</h3>
       
       {/* Zone Legend */}
       <div className="flex flex-wrap gap-3 mb-4">
@@ -257,10 +257,10 @@ function ZoneWiseTrendCard({ zonesData }: { zonesData: ZoneTrendData[] }) {
       {/* Zone Stats */}
       <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 md:grid-cols-3 gap-3">
         {zonesData.map((z, i) => (
-          <div key={z.zoneId} className="bg-gray-50 rounded-lg p-2">
+          <div key={z.zoneId} className="bg-gray-50 dark:bg-slate-700/50 rounded-lg p-2">
             <div className="flex items-center gap-1.5 mb-1">
               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: colors[i % colors.length] }} />
-              <span className="text-[11px] font-bold text-gray-700">{z.zone}</span>
+              <span className="text-[11px] font-bold text-gray-700 dark:text-gray-200">{z.zone}</span>
             </div>
             <div className="text-[10px] text-gray-500 space-x-2">
               <span>Avg: <strong>{z.stats.avg}%</strong></span>
@@ -276,8 +276,8 @@ function ZoneWiseTrendCard({ zonesData }: { zonesData: ZoneTrendData[] }) {
 
 function IrrigationHistoryCard({ events }: { events: IrrigationEvent[] }) {
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-      <h3 className="font-bold text-gray-900 text-[15px] mb-4 flex items-center gap-2">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700">
+      <h3 className="font-bold text-gray-900 dark:text-gray-100 text-[15px] mb-4 flex items-center gap-2">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
         Irrigation History
       </h3>
@@ -288,8 +288,8 @@ function IrrigationHistoryCard({ events }: { events: IrrigationEvent[] }) {
       ) : (
         <div className="space-y-3 max-h-[250px] overflow-y-auto">
           {events.slice(0, 8).map((event, i) => (
-            <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${event.type === "start" ? "bg-green-100" : "bg-red-100"}`}>
+            <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${event.type === "start" ? "bg-green-100 dark:bg-green-900/30" : "bg-red-100 dark:bg-red-900/30"}`}>
                 {event.type === "start" ? (
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 ) : (
@@ -297,7 +297,7 @@ function IrrigationHistoryCard({ events }: { events: IrrigationEvent[] }) {
                 )}
               </div>
               <div className="flex-1">
-                <div className="text-[13px] font-semibold text-gray-900">
+                <div className="text-[13px] font-semibold text-gray-900 dark:text-gray-100">
                   Pump {event.type === "start" ? "Started" : "Stopped"}
                 </div>
                 <div className="text-[11px] text-gray-400">
@@ -324,8 +324,8 @@ function AlertsHistoryCard({ alerts }: { alerts: AlertData[] }) {
   const getColor = (type: string) => type === "critical" ? "bg-red-500" : "bg-amber-500";
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-      <h3 className="font-bold text-gray-900 text-[15px] mb-4 flex items-center gap-2">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700">
+      <h3 className="font-bold text-gray-900 dark:text-gray-100 text-[15px] mb-4 flex items-center gap-2">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         Recent Alerts
         {alerts.length > 0 && (
@@ -342,10 +342,10 @@ function AlertsHistoryCard({ alerts }: { alerts: AlertData[] }) {
       ) : (
         <div className="space-y-3 max-h-[250px] overflow-y-auto">
           {alerts.slice(0, 8).map((alert, i) => (
-            <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
+            <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
               <div className={`w-2 h-2 rounded-full mt-1.5 ${getColor(alert.type)}`} />
               <div className="flex-1 min-w-0">
-                <div className="text-[13px] font-semibold text-gray-900">{alert.title}</div>
+                <div className="text-[13px] font-semibold text-gray-900 dark:text-gray-100">{alert.title}</div>
                 <div className="text-[11px] text-gray-500 truncate">{alert.message}</div>
               </div>
               <div className="text-right shrink-0">
@@ -420,7 +420,7 @@ export default function ReportsPage() {
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-1.5">
-          <h1 className="text-[20px] font-extrabold text-gray-900 tracking-tight">Decision Support</h1>
+          <h1 className="text-[20px] font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">Decision Support</h1>
           <div className="flex items-center gap-1.5">
             <div className={`w-1.5 h-1.5 rounded-full ${isConnected ? "bg-[#3CC15A]" : "bg-gray-400"}`}></div>
             <span className={`text-[10px] font-bold ${isConnected ? "text-[#3CC15A]" : "text-gray-400"}`}>
@@ -469,7 +469,7 @@ export default function ReportsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Recommendations - 2 columns */}
         <div className="lg:col-span-2 space-y-4">
-          <h2 className="font-bold text-gray-900 text-[16px] flex items-center gap-2">
+          <h2 className="font-bold text-gray-900 dark:text-gray-100 text-[16px] flex items-center gap-2">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3CC15A" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             Smart Recommendations
           </h2>
@@ -479,7 +479,7 @@ export default function ReportsPage() {
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
               </div>
-              <h3 className="font-bold text-gray-900 mb-2">All Systems Optimal</h3>
+              <h3 className="font-bold text-gray-900 dark:text-gray-200 mb-2">All Systems Optimal</h3>
               <p className="text-gray-500 text-[13px]">No recommendations at this time. Your irrigation system is running efficiently.</p>
             </div>
           ) : (

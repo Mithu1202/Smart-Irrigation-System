@@ -22,4 +22,7 @@ ZoneSchema.pre("save", function (next) {
   next();
 });
 
+ZoneSchema.index({ zoneId: 1 });
+ZoneSchema.index({ name: 1 });
+
 module.exports = mongoose.model("Zone", ZoneSchema);

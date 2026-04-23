@@ -11,11 +11,11 @@ function AlertCard({ alert }: { alert: AlertData }) {
   
   return (
     <div className={`rounded-2xl p-5 shadow-sm border transition-all hover:shadow-md ${
-      isCritical ? "bg-red-50 border-red-200" : "bg-amber-50 border-amber-200"
+      isCritical ? "bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-900/50" : "bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-900/50"
     }`}>
       <div className="flex items-start gap-4">
         <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
-          isCritical ? "bg-red-100" : "bg-amber-100"
+          isCritical ? "bg-red-100 dark:bg-red-900/30" : "bg-amber-100 dark:bg-amber-900/30"
         }`}>
           {isCritical ? (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2.5">
@@ -30,24 +30,24 @@ function AlertCard({ alert }: { alert: AlertData }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
-            <h3 className="font-bold text-gray-900 text-[15px]">{alert.title}</h3>
+            <h3 className="font-bold text-gray-900 dark:text-gray-100 text-[15px]">{alert.title}</h3>
             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-              isCritical ? "bg-red-100 text-red-700" : "bg-amber-100 text-amber-700"
+              isCritical ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400" : "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
             }`}>
               {alert.type.toUpperCase()}
             </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300">
               {alert.zone}
             </span>
           </div>
-          <p className="text-gray-600 text-[13px] mb-2">{alert.message}</p>
-          <div className="flex items-center gap-4 text-[11px] text-gray-500">
-            <span>Value: <strong className="text-gray-700">{alert.value}</strong></span>
-            <span>Threshold: <strong className="text-gray-700">{alert.threshold}</strong></span>
+          <p className="text-gray-600 dark:text-gray-300 text-[13px] mb-2">{alert.message}</p>
+          <div className="flex items-center gap-4 text-[11px] text-gray-500 dark:text-gray-400">
+            <span>Value: <strong className="text-gray-700 dark:text-gray-200">{alert.value}</strong></span>
+            <span>Threshold: <strong className="text-gray-700 dark:text-gray-200">{alert.threshold}</strong></span>
           </div>
         </div>
         <div className="text-right shrink-0">
-          <div className="text-[14px] font-bold text-gray-900">
+          <div className="text-[14px] font-bold text-gray-900 dark:text-gray-100">
             {date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true })}
           </div>
           <div className="text-[11px] text-gray-400">
@@ -61,11 +61,11 @@ function AlertCard({ alert }: { alert: AlertData }) {
 
 function StatsCard({ title, value, color, icon }: { title: string; value: number; color: string; icon: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700">
       <div className="flex items-center gap-3">
         <div className={`${color} w-12 h-12 rounded-xl flex items-center justify-center`}>{icon}</div>
         <div>
-          <div className="text-[28px] font-extrabold text-gray-900">{value}</div>
+          <div className="text-[28px] font-extrabold text-gray-900 dark:text-gray-100">{value}</div>
           <div className="text-[13px] text-gray-500 font-medium">{title}</div>
         </div>
       </div>
@@ -133,7 +133,7 @@ export default function AlertsPage() {
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-1.5">
-          <h1 className="text-[20px] font-extrabold text-gray-900 tracking-tight">System Alerts</h1>
+          <h1 className="text-[20px] font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">System Alerts</h1>
           <div className="flex items-center gap-1.5">
             <div className={`w-1.5 h-1.5 rounded-full ${isConnected ? "bg-[#3CC15A]" : "bg-gray-400"}`}></div>
             <span className={`text-[10px] font-bold ${isConnected ? "text-[#3CC15A]" : "text-gray-400"}`}>
@@ -191,12 +191,12 @@ export default function AlertsPage() {
             className={`px-4 py-2 rounded-xl text-[13px] font-semibold transition-all flex items-center gap-2 ${
               filter === tab.key 
                 ? "bg-[#3CC15A] text-white shadow-sm" 
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700"
             }`}
           >
             {tab.label}
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-              filter === tab.key ? "bg-white/20" : "bg-gray-200"
+              filter === tab.key ? "bg-white/20" : "bg-gray-200 dark:bg-slate-700"
             }`}>
               {tab.count}
             </span>
@@ -207,14 +207,14 @@ export default function AlertsPage() {
       {/* Alerts List */}
       <div className="space-y-3">
         {filteredAlerts.length === 0 ? (
-          <div className="bg-green-50 rounded-2xl p-12 text-center border border-green-200">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="bg-green-50 dark:bg-green-900/10 rounded-2xl p-12 text-center border border-green-200 dark:border-green-900/50">
+            <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.5">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
               </svg>
             </div>
-            <h3 className="font-bold text-green-800 mb-2">All Clear!</h3>
-            <p className="text-green-600 text-[13px]">No alerts at the moment. Your system is running smoothly.</p>
+            <h3 className="font-bold text-green-800 dark:text-green-400 mb-2">All Clear!</h3>
+            <p className="text-green-600 dark:text-green-500 text-[13px]">No alerts at the moment. Your system is running smoothly.</p>
           </div>
         ) : (
           filteredAlerts.map((alert, i) => (

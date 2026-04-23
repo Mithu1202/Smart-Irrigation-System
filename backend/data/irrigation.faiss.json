@@ -1,0 +1,93 @@
+{
+  "dimension": 128,
+  "count": 5,
+  "csvPath": "D:\\AI&ML\\Smart-Irrigation-System\\backend\\data\\irrigation_knowledge.csv",
+  "generatedAt": "2026-04-23T14:51:56.249Z",
+  "documents": [
+    {
+      "id": "1",
+      "crop": "Rice",
+      "description": "Rice responds well to steady moisture and cooler field temperatures.",
+      "recommendation": "Irrigate when moisture falls below the crop threshold and the trend is declining.",
+      "soil_moisture": "38",
+      "temp": "30",
+      "humidity": "68",
+      "rainfall": "5",
+      "normalized": {
+        "soilMoisture": 38,
+        "temperature": 30,
+        "humidity": 68,
+        "rainfall": 5
+      },
+      "text": "Rice responds well to steady moisture and cooler field temperatures. Irrigate when moisture falls below the crop threshold and the trend is declining. Rice soil moisture 38 temperature 30 humidity 68 rainfall 5"
+    },
+    {
+      "id": "2",
+      "crop": "Tomato",
+      "description": "Tomato plants are sensitive to dry spells during flowering.",
+      "recommendation": "Prioritize irrigation when soil moisture drops quickly and humidity is low.",
+      "soil_moisture": "28",
+      "temp": "32",
+      "humidity": "52",
+      "rainfall": "2",
+      "normalized": {
+        "soilMoisture": 28,
+        "temperature": 32,
+        "humidity": 52,
+        "rainfall": 2
+      },
+      "text": "Tomato plants are sensitive to dry spells during flowering. Prioritize irrigation when soil moisture drops quickly and humidity is low. Tomato soil moisture 28 temperature 32 humidity 52 rainfall 2"
+    },
+    {
+      "id": "3",
+      "crop": "Chili",
+      "description": "Chili plants prefer moderate moisture with good drainage.",
+      "recommendation": "Use shorter irrigation cycles when rainfall has already contributed water.",
+      "soil_moisture": "34",
+      "temp": "31",
+      "humidity": "58",
+      "rainfall": "8",
+      "normalized": {
+        "soilMoisture": 34,
+        "temperature": 31,
+        "humidity": 58,
+        "rainfall": 8
+      },
+      "text": "Chili plants prefer moderate moisture with good drainage. Use shorter irrigation cycles when rainfall has already contributed water. Chili soil moisture 34 temperature 31 humidity 58 rainfall 8"
+    },
+    {
+      "id": "4",
+      "crop": "Leafy Greens",
+      "description": "Leafy greens need frequent but light watering.",
+      "recommendation": "Check the 24h average moisture before turning the pump on.",
+      "soil_moisture": "42",
+      "temp": "26",
+      "humidity": "73",
+      "rainfall": "4",
+      "normalized": {
+        "soilMoisture": 42,
+        "temperature": 26,
+        "humidity": 73,
+        "rainfall": 4
+      },
+      "text": "Leafy greens need frequent but light watering. Check the 24h average moisture before turning the pump on. Leafy Greens soil moisture 42 temperature 26 humidity 73 rainfall 4"
+    },
+    {
+      "id": "5",
+      "crop": "Maize",
+      "description": "Maize can tolerate brief dry periods but not sustained stress.",
+      "recommendation": "Activate irrigation when the threshold gap becomes strongly negative.",
+      "soil_moisture": "24",
+      "temp": "35",
+      "humidity": "45",
+      "rainfall": "1",
+      "normalized": {
+        "soilMoisture": 24,
+        "temperature": 35,
+        "humidity": 45,
+        "rainfall": 1
+      },
+      "text": "Maize can tolerate brief dry periods but not sustained stress. Activate irrigation when the threshold gap becomes strongly negative. Maize soil moisture 24 temperature 35 humidity 45 rainfall 1"
+    }
+  ]
+}

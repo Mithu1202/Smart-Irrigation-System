@@ -1,0 +1,6 @@
+id,crop,description,recommendation,soil_moisture,temp,humidity,rainfall
+1,Rice,"Rice responds well to steady moisture and cooler field temperatures.","Irrigate when moisture falls below the crop threshold and the trend is declining.",38,30,68,5
+2,Tomato,"Tomato plants are sensitive to dry spells during flowering.","Prioritize irrigation when soil moisture drops quickly and humidity is low.",28,32,52,2
+3,Chili,"Chili plants prefer moderate moisture with good drainage.","Use shorter irrigation cycles when rainfall has already contributed water.",34,31,58,8
+4,Leafy Greens,"Leafy greens need frequent but light watering.","Check the 24h average moisture before turning the pump on.",42,26,73,4
+5,Maize,"Maize can tolerate brief dry periods but not sustained stress.","Activate irrigation when the threshold gap becomes strongly negative.",24,35,45,1

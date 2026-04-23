@@ -3,6 +3,7 @@ require("dotenv").config();
 const mqtt = require("mqtt");
 const Data = require("../models/Data");
 const Zone = require("../models/Zone");
+const { buildEnrichedRecord } = require("../analytics/featureEngineering");
 
 // Convert soil moisture - handles both raw ADC (1500-4095) and normalized (0-100)
 const convertSoilMoisture = (value) => {
@@ -114,6 +115,42 @@ client.on("message", async (topic, message) => {
       pumpStatus: payload.pump_status || "OFF",
       timestamp: new Date(),
     };
+
+    const zoneDoc =
+      (await Zone.findOne({ zoneId: sensorData.zone })) ||
+      (await Zone.findOne({ name: sensorData.zone })) ||
+      null;
+
+    const recentReadings = await Data.find({ zone: sensorData.zone })
+      .sort({ timestamp: 1 })
+      .limit(24);
+
+    const windowReadings = [...recentReadings, sensorData];
+    const enrichedSensorData = buildEnrichedRecord({
+      current: sensorData,
+      previous: recentReadings[recentReadings.length - 1],
+      zone: zoneDoc,
+      windowReadings,
+      irrigationEvents: windowReadings.filter(
+        (reading) => String(reading.pumpStatus || "").toUpperCase() === "ON"
+      ),
+    });
+
+    Object.assign(sensorData, {
+      thresholdGap: enrichedSensorData.thresholdGap,
+      moistureTrend: enrichedSensorData.moistureTrend,
+      avgMoisture_24h: enrichedSensorData.avgMoisture_24h,
+      riskLevel: enrichedSensorData.riskLevel,
+      irrigationNeed: enrichedSensorData.irrigationNeed,
+      timeOfDay: enrichedSensorData.timeOfDay,
+      temperatureDelta: enrichedSensorData.temperatureDelta,
+      humidityDelta: enrichedSensorData.humidityDelta,
+      moistureVolatility: enrichedSensorData.moistureVolatility,
+      waterStressIndex: enrichedSensorData.waterStressIndex,
+      recentIrrigationCount: enrichedSensorData.recentIrrigationCount,
+      enrichmentSource: "mqtt",
+      enrichedAt: new Date(),
+    });
 
     // --- CHECK FOR CRITICAL ALERTS ---
     const alerts = [];

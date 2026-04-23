@@ -52,6 +52,91 @@ export interface ReportStats {
   savings: { waterSaved: number; estimatedLiters: number };
 }
 
+export interface EnrichedReading {
+  soilMoisture: number;
+  temperature: number;
+  humidity: number;
+  soilMoistureRaw?: number;
+  moistureTrend: number;
+  avgMoisture_24h: number;
+  thresholdGap: number;
+  riskLevel: "LOW" | "MEDIUM" | "HIGH";
+  irrigationNeed: boolean;
+  timeOfDay: string;
+  temperatureDelta: number;
+  humidityDelta: number;
+  moistureVolatility: number;
+  waterStressIndex: number;
+  recentIrrigationCount: number;
+  timestamp?: string;
+}
+
+export interface ROIResponse {
+  zone: { zoneId: string; name: string };
+  baselineWater: number;
+  optimizedWater: number;
+  waterSaved: number;
+  costSaving: number;
+  systemCost: number;
+  roi: number;
+  efficiencyGain: number;
+  sampleSize?: number;
+}
+
+export interface AgentQueryResponse {
+  question: string;
+  decision: string;
+  reason: string;
+  action: string;
+  confidence: number;
+  riskLevel: "LOW" | "MEDIUM" | "HIGH";
+  answer?: string;
+  assistantMessage?: string;
+  mode?: "decision" | "logs" | "guidance" | "crop" | "qa" | "roi";
+  openRouter?: {
+    configured: boolean;
+    model: string;
+  };
+  llmOutput?: {
+    decision?: string;
+    reason?: string;
+    action?: string;
+    summary?: string;
+    nextSteps?: string[];
+    [key: string]: unknown;
+  } | null;
+  data: {
+    zone: unknown;
+    realtime: unknown;
+    trend: unknown;
+    thresholdGap: unknown;
+    risk: unknown;
+    prediction: unknown;
+    roi: unknown;
+    irrigationLogs?: unknown;
+    cropEvidence?: unknown;
+    recommendedCrops?: unknown;
+    evidence?: string[];
+    nextSteps?: string[];
+  };
+  retrieval: unknown;
+  websiteContext?: unknown;
+  toolTrace: unknown[];
+}
+
+export interface IrrigationLogsResponse {
+  zone: unknown;
+  dateRange: { start: string; end: string } | null;
+  summary: {
+    count: number;
+    pumpOnCount: number;
+    criticalCount: number;
+    avgMoisture: number;
+    avgTemperature: number;
+  };
+  logs: unknown[];
+}
+
 export const getLatestData = async () => {
   const res = await api.get("/data/latest");
   return res.data;
@@ -140,6 +225,61 @@ export const getAlertsHistory = async (limit = 50): Promise<{
 
 export const getReportStats = async (): Promise<ReportStats> => {
   const res = await api.get("/zones/reports/stats");
+  return res.data;
+};
+
+export const getEnrichedData = async (zone?: string, limit = 20): Promise<{
+  zone: unknown;
+  count: number;
+  enriched: EnrichedReading[];
+}> => {
+  const url = zone
+    ? `/analytics/enriched-data?zone=${encodeURIComponent(zone)}&limit=${limit}`
+    : `/analytics/enriched-data?limit=${limit}`;
+  const res = await api.get(url);
+  return res.data;
+};
+
+export const getROIAnalysis = async (
+  zone?: string,
+  params?: { systemCost?: number; costPerLiter?: number; litersPerReading?: number }
+): Promise<ROIResponse> => {
+  const query = new URLSearchParams();
+  if (zone) query.set("zone", zone);
+  if (params?.systemCost !== undefined) query.set("systemCost", String(params.systemCost));
+  if (params?.costPerLiter !== undefined) query.set("costPerLiter", String(params.costPerLiter));
+  if (params?.litersPerReading !== undefined) query.set("litersPerReading", String(params.litersPerReading));
+
+  const res = await api.get(`/analytics/roi${query.toString() ? `?${query.toString()}` : ""}`);
+  return res.data;
+};
+
+export const queryAgent = async (
+  question: string,
+  options?: {
+    zone?: string;
+    systemCost?: number;
+    costPerLiter?: number;
+    litersPerReading?: number;
+  }
+): Promise<AgentQueryResponse> => {
+  const res = await api.post("/agent/query", {
+    question,
+    ...options,
+  });
+  return res.data;
+};
+
+export const getIrrigationLogs = async (
+  date?: string,
+  zone?: string,
+  limit = 20
+): Promise<IrrigationLogsResponse> => {
+  const query = new URLSearchParams();
+  if (date) query.set("date", date);
+  if (zone) query.set("zone", zone);
+  query.set("limit", String(limit));
+  const res = await api.get(`/analytics/logs?${query.toString()}`);
   return res.data;
 };
 

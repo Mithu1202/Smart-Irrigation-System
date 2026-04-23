@@ -12,12 +12,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* 
           DESKTOP LAYOUT (md and up)
       */}
-      <div className="hidden md:block min-h-screen bg-gray-50 p-6 font-sans">
-        <div className="flex bg-white rounded-[22px] overflow-hidden shadow-sm border border-gray-100 min-h-[calc(100vh-3rem)]">
+      <div className="hidden md:block min-h-screen bg-gray-50 dark:bg-slate-900 p-6 font-sans transition-colors">
+        <div className="flex bg-white dark:bg-slate-800 rounded-[22px] overflow-hidden shadow-sm border border-gray-100 dark:border-slate-700 min-h-[calc(100vh-3rem)]">
           {/* Desktop Sidebar */}
           <Sidebar isOpen={false} onClose={() => {}} isDesktop={true} />
 
-          <div className="flex-1 bg-[#f5f6f8] flex flex-col h-[calc(100vh-3rem)] overflow-hidden">
+          <div className="flex-1 bg-[#f5f6f8] dark:bg-slate-900 flex flex-col h-[calc(100vh-3rem)] overflow-hidden transition-colors">
             {/* Desktop Header */}
             <Header onOpenSidebar={() => {}} isDesktop={true} />
             
@@ -32,10 +32,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* 
           MOBILE LAYOUT (strictly < md)
       */}
-      <div className="flex md:hidden min-h-screen bg-[#2D2D2D] items-center justify-center font-sans tracking-tight">
-        <div className="w-full h-[100dvh] max-w-[390px] bg-[#F4F5F4] shadow-2xl flex flex-col relative mx-auto overflow-hidden">
+      <div className="flex md:hidden min-h-screen bg-[#2D2D2D] dark:bg-slate-950 items-center justify-center font-sans tracking-tight">
+        <div className="w-full h-[100dvh] max-w-[390px] bg-[#F4F5F4] dark:bg-slate-800 shadow-2xl flex flex-col relative mx-auto overflow-hidden transition-colors">
           {/* iOS Status Bar Mockup */}
-          <div className="px-6 py-3.5 flex justify-between items-center text-black font-semibold text-[15px] z-10 shrink-0 bg-[#F4F5F4]">
+          <div className="px-6 py-3.5 flex justify-between items-center text-black dark:text-gray-100 font-semibold text-[15px] z-10 shrink-0 bg-[#F4F5F4] dark:bg-slate-800 transition-colors">
             <span>9:41</span>
             <div className="flex items-center gap-1.5">
               <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor">
@@ -56,7 +56,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           <Header onOpenSidebar={() => setIsSidebarOpen(true)} isDesktop={false} />
           
-          <div className="flex-1 overflow-y-auto px-5 pt-3 pb-8 hide-scrollbar relative z-0">
+          <div className="flex-1 overflow-y-auto px-5 pt-3 pb-8 hide-scrollbar relative z-0 bg-[#F4F5F4] dark:bg-slate-800 transition-colors">
             {children}
           </div>
 
@@ -65,4 +65,4 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
     </>
   );
-}
+}

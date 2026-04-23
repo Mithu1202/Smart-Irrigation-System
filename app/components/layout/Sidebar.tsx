@@ -9,6 +9,7 @@ const generalMenu = [
   { name: "Reports", path: "/reports", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> },
   { name: "Irrigation Logs", path: "/logs", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.423L16 11" /><rect x="2" y="6" width="14" height="12" rx="2" /></svg> },
   { name: "Alerts", path: "/alerts", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg> },
+  { name: "AI Assistant", path: "/assistant", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 0 1 10 10v4a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2V9a8 8 0 0 0-16 0v1a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4A10 10 0 0 1 12 2Z"/></svg> },
 ];
 
 const accountMenu = [
@@ -30,17 +31,17 @@ export default function Sidebar({
 
   if (isDesktop) {
     return (
-      <aside className="w-[280px] bg-white flex flex-col p-6 overflow-y-auto border-r border-gray-100 shrink-0">
+      <aside className="w-[280px] bg-white dark:bg-slate-800 flex flex-col p-6 overflow-y-auto border-r border-gray-100 dark:border-slate-700 shrink-0 transition-colors">
         {/* Logo */}
         <div className="flex items-center mb-10 pl-2">
           <div className="p-1 rounded-lg flex items-center justify-center mr-3">
             <Image src="/logo.svg" alt="ZoneHub" width={40} height={30} />
           </div>
-          <span className="text-[#101828] text-2xl font-bold tracking-tight">Zone<span className="text-[#3CC15A] text-2xl font-bold tracking-tight">Hub</span></span>
+          <span className="text-[#101828] dark:text-gray-100 text-2xl font-bold tracking-tight">Zone<span className="text-[#3CC15A] text-2xl font-bold tracking-tight">Hub</span></span>
         </div>
 
         {/* General Menu */}
-        <div className="text-[11px] font-bold text-gray-400 mb-4 tracking-wider pl-2 uppercase">GENERAL</div>
+        <div className="text-[11px] font-bold text-gray-400 dark:text-gray-500 mb-4 tracking-wider pl-2 uppercase">GENERAL</div>
         <nav className="space-y-1.5 mb-8">
           {generalMenu.map((item) => {
             const active = pathname === item.path || (item.path !== "/" && pathname.startsWith(item.path));
@@ -50,7 +51,7 @@ export default function Sidebar({
                 href={item.path}
                 className={`flex items-center px-4 py-3 rounded-xl text-[14px] font-medium transition-all ${active
                   ? "bg-[#3CC15A] text-white shadow-sm"
-                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                  : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-gray-100"
                   }`}
               >
                 <div className="mr-3">{item.icon}</div>
@@ -61,14 +62,14 @@ export default function Sidebar({
         </nav>
 
         {/* Account Menu */}
-        <div className="text-[11px] font-bold text-gray-400 mb-4 tracking-wider pl-2 uppercase">ACCOUNT</div>
+        <div className="text-[11px] font-bold text-gray-400 dark:text-gray-500 mb-4 tracking-wider pl-2 uppercase">ACCOUNT</div>
         <nav className="space-y-1.5">
           {accountMenu.map((item) => {
             return (
               <Link
                 key={item.name}
                 href={item.path}
-                className="flex items-center px-4 py-3 rounded-xl text-[14px] font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all"
+                className="flex items-center px-4 py-3 rounded-xl text-[14px] font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-gray-100 transition-all"
               >
                 <div className="mr-3">{item.icon}</div>
                 {item.name}
@@ -86,18 +87,18 @@ export default function Sidebar({
       {/* Overlay */}
       {isOpen && (
         <div 
-          className="absolute inset-0 bg-black/40 z-40 transition-opacity"
+          className="absolute inset-0 bg-black/40 dark:bg-black/60 z-40 transition-opacity"
           onClick={onClose}
         ></div>
       )}
 
       {/* Slide-over Drawer */}
       <aside 
-        className={`absolute top-0 left-0 bottom-0 w-[82%] sm:w-[320px] bg-white z-50 transform transition-transform duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isOpen ? 'translate-x-0' : '-translate-x-full'} shadow-2xl flex flex-col p-6 rounded-r-3xl`}
+        className={`absolute top-0 left-0 bottom-0 w-[82%] sm:w-[320px] bg-white dark:bg-slate-800 z-50 transform transition-transform duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isOpen ? 'translate-x-0' : '-translate-x-full'} shadow-2xl flex flex-col p-6 rounded-r-3xl`}
       >
         <div className="flex justify-between items-center mb-8">
-          <span className="text-[17px] font-extrabold tracking-tight text-gray-900 ml-1">Menu</span>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-900 focus:outline-none bg-gray-50 p-1.5 rounded-full">
+          <span className="text-[17px] font-extrabold tracking-tight text-gray-900 dark:text-gray-100 ml-1">Menu</span>
+          <button onClick={onClose} className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none bg-gray-50 dark:bg-slate-700 p-1.5 rounded-full transition-colors">
              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
@@ -110,16 +111,16 @@ export default function Sidebar({
                 key={item.name}
                 href={item.path}
                 onClick={onClose}
-                className={`flex items-center px-3 py-1.5 text-[15px] font-medium transition-all text-gray-500 hover:text-gray-900`}
+                className={`flex items-center px-3 py-1.5 text-[15px] font-medium transition-all text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100`}
               >
-                <div className="mr-5 text-gray-400">{item.icon}</div>
+                <div className="mr-5 text-gray-400 dark:text-gray-500">{item.icon}</div>
                 {item.name}
               </Link>
             );
           })}
         </nav>
         
-        <hr className="border-gray-100 mb-8 w-1/4 ml-4" />
+        <hr className="border-gray-100 dark:border-slate-700 mb-8 w-1/4 ml-4 transition-colors" />
 
         {/* Account Menu */}
         <nav className="space-y-2.5">
@@ -129,9 +130,9 @@ export default function Sidebar({
                 key={item.name}
                 href={item.path}
                 onClick={onClose}
-                className="flex items-center px-3 py-1.5 text-[15px] font-medium text-gray-500 hover:text-gray-900 transition-all"
+                className="flex items-center px-3 py-1.5 text-[15px] font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-all"
               >
-                <div className="mr-5 text-gray-400">{item.icon}</div>
+                <div className="mr-5 text-gray-400 dark:text-gray-500">{item.icon}</div>
                 {item.name}
               </Link>
             );
