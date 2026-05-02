@@ -1,0 +1,43 @@
+Smart Irrigation System - ML Training Report
+Generated: 2026-05-02 22:56:05
+============================================================
+
+Dataset size:     10,000 samples
+Features:         25
+Test Accuracy:    0.9875
+CV Accuracy:      0.9828 +/- 0.0015
+
+Classification Report:
+              precision    recall  f1-score   support
+
+         Low     0.9974    0.9957    0.9966      1173
+      Medium     0.9742    0.9934    0.9837       760
+        High     0.9630    0.7761    0.8595        67
+
+    accuracy                         0.9875      2000
+   macro avg     0.9782    0.9218    0.9466      2000
+weighted avg     0.9875    0.9875    0.9871      2000
+
+
+Confusion Matrix:
+[[1168    5    0]
+ [   3  755    2]
+ [   0   15   52]]
+
+Feature Importance (top 15):
+                feature  importance
+      Crop_Growth_Stage    0.147129
+            Rainfall_mm    0.111209
+          Temperature_C    0.108769
+          Soil_Moisture    0.107812
+         Wind_Speed_kmh    0.098811
+       moisture_deficit    0.095061
+          Mulching_Used    0.081208
+      adequate_rainfall    0.050287
+      low_moisture_flag    0.026134
+      heat_stress_index    0.024282
+               Humidity    0.019074
+Electrical_Conductivity    0.016807
+         Sunlight_Hours    0.016791
+ Previous_Irrigation_mm    0.016256
+         Organic_Carbon    0.015786

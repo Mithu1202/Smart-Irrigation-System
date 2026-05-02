@@ -450,6 +450,20 @@ export default function DashboardPage() {
   const [trendData, setTrendData] = useState<EnrichedReading[]>([]);
   const [irrigationLogs, setIrrigationLogs] = useState<IrrigationLogsResponse | null>(null);
   const [pumpBusy, setPumpBusy] = useState(false);
+  const [userName, setUserName] = useState("User");
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("user");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const name = parsed.fullName || parsed.name;
+        if (name) {
+          setUserName(name.split(" ")[0]);
+        }
+      }
+    } catch(e) {}
+  }, []);
 
   const alerts = rawAlerts.map((alert) => ({
     title: alert.title,
@@ -592,7 +606,7 @@ export default function DashboardPage() {
         <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <h1 className="text-[24px] lg:text-[28px] font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">
-              Good Morning, Mithu! 👋
+              Good Morning, {userName}! 👋
             </h1>
             <p className="mt-1 text-gray-500 text-[13px] lg:text-[14px] font-medium">
               Optimize your farm operations with real-time insights and AI recommendations.
