@@ -3,6 +3,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ThemeToggle } from "../ThemeToggle";
 import { useState, useEffect, useRef } from "react";
+import { getIrrigationLogs } from "../../../lib/api";
+import { useSocket } from "../../../lib/useSocket";
 
 export default function Header({ 
   onOpenSidebar, 
@@ -56,14 +58,40 @@ export default function Header({
     router.push("/login");
   };
 
-  const dummyNotifications = [
-    { id: 1, title: "Pump 1 Started", time: "2 mins ago", type: "info" },
-    { id: 2, title: "Low Moisture in Zone A", time: "1 hr ago", type: "warning" },
-    { id: 3, title: "System Offline", time: "5 hrs ago", type: "critical" },
-    { id: 4, title: "Weekly Report Ready", time: "1 day ago", type: "info" },
-  ];
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const { isConnected, latestData } = useSocket();
 
-  const unreadCount = dummyNotifications.length;
+  // Load historical notifications (Pump events)
+  useEffect(() => {
+    async function loadLogs() {
+      try {
+        const logs = await getIrrigationLogs();
+        const formatted = logs.slice(0, 4).map((log: any) => ({
+          id: log._id,
+          title: `Pump in ${log.zone} is ${log.status}`,
+          time: new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          type: log.status === "ON" ? "info" : "gray"
+        }));
+        setNotifications(formatted);
+      } catch (e) {}
+    }
+    loadLogs();
+  }, []);
+
+  // Handle Real-time Alerts from Socket
+  useEffect(() => {
+    if (latestData && latestData.soilMoisture < 20) {
+      const lowMoistureAlert = {
+        id: Date.now(),
+        title: `CRITICAL: Low Moisture (${latestData.soilMoisture}%)`,
+        time: "Just now",
+        type: "critical"
+      };
+      setNotifications(prev => [lowMoistureAlert, ...prev.slice(0, 3)]);
+    }
+  }, [latestData]);
+
+  const unreadCount = notifications.length;
 
   const getProfileImage = () => {
     const name = user?.name || "SF";
@@ -77,15 +105,19 @@ export default function Header({
         <span className="text-xs font-semibold bg-[#3CC15A] text-white px-2 py-0.5 rounded-full">{unreadCount} New</span>
       </div>
       <div className="max-h-80 overflow-y-auto">
-        {dummyNotifications.map(n => (
-          <div key={n.id} className="p-4 border-b border-gray-50 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition cursor-pointer flex gap-3">
-            <div className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${n.type === 'critical' ? 'bg-[#E74C3C]' : n.type === 'warning' ? 'bg-[#F39C12]' : 'bg-[#3CC15A]'}`} />
-            <div>
-              <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{n.title}</p>
-              <p className="text-xs text-gray-400 mt-1">{n.time}</p>
+        {notifications.length === 0 ? (
+          <div className="p-8 text-center text-gray-400 text-sm">No new notifications</div>
+        ) : (
+          notifications.map(n => (
+            <div key={n.id} className="p-4 border-b border-gray-50 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition cursor-pointer flex gap-3">
+              <div className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${n.type === 'critical' ? 'bg-[#E74C3C]' : n.type === 'warning' ? 'bg-[#F39C12]' : 'bg-[#3CC15A]'}`} />
+              <div>
+                <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{n.title}</p>
+                <p className="text-xs text-gray-400 mt-1">{n.time}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
       <Link href="/alerts" className="block text-center p-3 text-sm font-semibold text-[#3CC15A] hover:bg-[#3CC15A]/10 transition">
         View All Alerts

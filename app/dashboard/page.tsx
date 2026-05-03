@@ -190,15 +190,17 @@ function DataTableCard({
   emptyText,
 }: {
   title: string;
-  items: Array<{
-    label: string;
-    value: string;
-    meta?: string;
-    tone?: "green" | "red" | "amber" | "gray";
-    id?: string | number;
-  }>;
+  items: any[];
   emptyText: string;
 }) {
+  const recentLogs = items.slice(0, 5).map(log => ({
+    label: log.zone,
+    value: log.status,
+    meta: new Date(log.timestamp).toLocaleString(),
+    tone: log.status === "ON" ? "green" : "gray" as const,
+    id: log._id
+  }));
+
   return (
     <div className="rounded-[24px] border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.3)] transition-colors">
       <div className="flex items-center justify-between mb-4">
@@ -207,11 +209,11 @@ function DataTableCard({
           Live
         </span>
       </div>
-      {items.length === 0 ? (
+      {recentLogs.length === 0 ? (
         <div className="text-[13px] text-gray-500 dark:text-gray-400 py-6">{emptyText}</div>
       ) : (
         <div className="space-y-3">
-          {items.slice(0, 5).map((item) => (
+          {recentLogs.map((item) => (
             <div key={item.id !== undefined ? item.id : `${item.label}-${item.value}`} className="flex items-center justify-between gap-3 border-b border-gray-100 dark:border-slate-700 pb-3 last:border-b-0 last:pb-0">
               <div>
                 <div className="text-[13px] font-semibold text-gray-900 dark:text-gray-100">{item.label}</div>
@@ -248,11 +250,7 @@ function TrendChartCard({
   subtitle: string;
 }) {
   const chartPoints = data.map((entry) => ({
-    time: entry.timeOfDay || new Date(entry.timestamp || Date.now()).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }),
+    time: new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     moisture: entry.soilMoisture,
     gap: entry.thresholdGap,
     stress: entry.waterStressIndex,
@@ -353,14 +351,11 @@ function RiskDistributionCard({ data }: { data: EnrichedReading[] }) {
 
 function ConditionsComparisonCard({ data }: { data: EnrichedReading[] }) {
   const chartData = data.map((entry) => ({
-    time: entry.timeOfDay || new Date(entry.timestamp || Date.now()).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }),
+    time: new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     moisture: entry.soilMoisture,
-    temperature: entry.temperature,
-    humidity: entry.humidity,
+    temp: entry.temperature,
+    hum: entry.humidity,
+    raw: entry.soilMoistureRaw
   }));
 
   return (
@@ -446,12 +441,32 @@ export default function DashboardPage() {
   const [zones, setZones] = useState<Zone[]>([]);
   const [selectedZone, setSelectedZone] = useState("default");
   const [loading, setLoading] = useState(true);
+  const [mlRefreshTrigger, setMlRefreshTrigger] = useState(0);
+  const [geoRefreshTrigger, setGeoRefreshTrigger] = useState(0);
   const { latestData, isConnected, alerts: rawAlerts } = useSocket();
   const [latest, setLatest] = useState<SensorData | null>(null);
   const [trendData, setTrendData] = useState<EnrichedReading[]>([]);
   const [irrigationLogs, setIrrigationLogs] = useState<IrrigationLogsResponse | null>(null);
   const [pumpBusy, setPumpBusy] = useState(false);
   const [userName, setUserName] = useState("User");
+
+  useEffect(() => {
+    const socket = (window as any).socket;
+    if (!socket) return;
+
+    socket.on("mlRefresh", () => {
+      setMlRefreshTrigger(prev => prev + 1);
+    });
+
+    socket.on("geoUpdate", () => {
+      setGeoRefreshTrigger(prev => prev + 1);
+    });
+
+    return () => {
+      socket.off("mlRefresh");
+      socket.off("geoUpdate");
+    };
+  }, []);
 
   useEffect(() => {
     try {
@@ -557,7 +572,7 @@ export default function DashboardPage() {
     return () => {
       mounted = false;
     };
-  }, [activeZoneId]);
+  }, [activeZoneId, geoRefreshTrigger]);
 
   const activePumps = zones.filter((zone) => zone.pumpActive).length;
   const alertCount = alerts.length;
@@ -788,6 +803,7 @@ export default function DashboardPage() {
               temperature={temperature}
               humidity={humidity}
               pumpStatus={pumpStatus}
+              refreshTrigger={mlRefreshTrigger}
             />
             <AgentPanel zone={activeZoneId} compact />
           </div>
