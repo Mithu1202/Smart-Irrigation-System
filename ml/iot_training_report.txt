@@ -1,0 +1,41 @@
+Smart Irrigation — IoT Time-Series Training Report
+Generated: 2026-05-02 23:57:14
+=================================================================
+
+Dataset   : D:\projects\Smart-Irrigation-System\iot_irrigation_final_balanced.csv
+Samples   : 3,309
+Irr Rate  : 1.60%
+SMOTE     : Yes
+
+REGRESSION — Next-Step Soil Moisture
+=================================================================
+Best      : RandomForest
+RMSE      : 2.3148  (CV: 2.3906 ± 0.1460)
+MAE       : 1.1801
+R2        : 0.7959
+
+  LinearRegression       RMSE=2.6459 MAE=1.9034 R2=0.7333
+  DecisionTree           RMSE=3.1538 MAE=1.2960 R2=0.6211
+  RandomForest           RMSE=2.3148 MAE=1.1801 R2=0.7959
+
+CLASSIFICATION — Next-Step Irrigation Need
+=================================================================
+Best      : RandomForest
+Threshold : 0.6
+Accuracy  : 0.9260
+Recall    : 0.4545
+F1        : 0.1695
+
+Classification Report:
+               precision    recall  f1-score   support
+
+No Irrigation     0.9902    0.9339    0.9613       651
+     Irrigate     0.1042    0.4545    0.1695        11
+
+     accuracy                         0.9260       662
+    macro avg     0.5472    0.6942    0.5654       662
+ weighted avg     0.9755    0.9260    0.9481       662
+
+Confusion Matrix:
+[[608  43]
+ [  6   5]]
