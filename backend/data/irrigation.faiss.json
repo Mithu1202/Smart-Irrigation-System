@@ -1,8 +1,8 @@
 {
   "dimension": 128,
   "count": 5,
-  "csvPath": "D:\\AI&ML\\Smart-Irrigation-System\\backend\\data\\irrigation_knowledge.csv",
-  "generatedAt": "2026-05-02T17:20:59.522Z",
+  "csvPath": "D:\\projects\\Smart-Irrigation-System\\backend\\data\\irrigation_knowledge.csv",
+  "generatedAt": "2026-05-03T04:36:05.622Z",
   "documents": [
     {
       "id": "1",

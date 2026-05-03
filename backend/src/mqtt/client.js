@@ -18,8 +18,12 @@ const client = mqtt.connect(`mqtts://${host}:${port}`, {
 const recentReadings = [];
 
 client.on("connect", () => {
-  console.log("✅ MQTT Connected to HiveMQ Cloud");
-  client.subscribe("smart_irrigation/data");
+  console.log("✅ MQTT Connected to HiveMQ Cloud (QoS 1 Ready)");
+  client.subscribe("smart_irrigation/data", { qos: 1 }, (err) => {
+    if (!err) {
+      console.log("📡 Subscribed to topic: smart_irrigation/data (QoS 1)");
+    }
+  });
 });
 
 // Calibration
