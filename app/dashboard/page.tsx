@@ -193,13 +193,17 @@ function DataTableCard({
   items: any[];
   emptyText: string;
 }) {
-  const recentLogs = items.slice(0, 5).map(log => ({
-    label: log.zone,
-    value: log.status,
-    meta: new Date(log.timestamp).toLocaleString(),
-    tone: log.status === "ON" ? "green" : "gray" as const,
-    id: log._id
-  }));
+  const recentLogs = items.slice(0, 5).map(log => {
+    const d = new Date(log.timestamp);
+    const timeStr = isNaN(d.getTime()) ? "Just now" : d.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return {
+      label: log.zone || "Zone A",
+      value: log.status || "OFF",
+      meta: timeStr,
+      tone: log.status === "ON" ? "green" : "gray" as const,
+      id: log._id || Math.random()
+    };
+  });
 
   return (
     <div className="rounded-[24px] border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.3)] transition-colors">
@@ -249,12 +253,14 @@ function TrendChartCard({
   title: string;
   subtitle: string;
 }) {
-  const chartPoints = data.map((entry) => ({
-    time: new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    moisture: entry.soilMoisture,
-    gap: entry.thresholdGap,
-    stress: entry.waterStressIndex,
-  }));
+  const chartPoints = data
+    .filter(entry => entry.timestamp && !isNaN(new Date(entry.timestamp).getTime()))
+    .map((entry) => ({
+      time: new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      moisture: entry.soilMoisture,
+      gap: entry.thresholdGap,
+      stress: entry.waterStressIndex,
+    }));
 
   return (
     <div className="rounded-[24px] border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.3)] transition-colors">
@@ -350,13 +356,15 @@ function RiskDistributionCard({ data }: { data: EnrichedReading[] }) {
 }
 
 function ConditionsComparisonCard({ data }: { data: EnrichedReading[] }) {
-  const chartData = data.map((entry) => ({
-    time: new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    moisture: entry.soilMoisture,
-    temp: entry.temperature,
-    hum: entry.humidity,
-    raw: entry.soilMoistureRaw
-  }));
+  const chartData = data
+    .filter(entry => entry.timestamp && !isNaN(new Date(entry.timestamp).getTime()))
+    .map((entry) => ({
+      time: new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      moisture: entry.soilMoisture,
+      temp: entry.temperature,
+      hum: entry.humidity,
+      raw: entry.soilMoistureRaw
+    }));
 
   return (
     <div className="rounded-[24px] border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.3)] transition-colors">

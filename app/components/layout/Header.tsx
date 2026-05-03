@@ -66,12 +66,15 @@ export default function Header({
     async function loadLogs() {
       try {
         const logs = await getIrrigationLogs();
-        const formatted = logs.slice(0, 4).map((log: any) => ({
-          id: log._id,
-          title: `Pump in ${log.zone} is ${log.status}`,
-          time: new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          type: log.status === "ON" ? "info" : "gray"
-        }));
+        const formatted = logs.slice(0, 4).map((log: any) => {
+          const d = new Date(log.timestamp);
+          return {
+            id: log._id,
+            title: `Pump in ${log.zone || "Zone A"} is ${log.status}`,
+            time: isNaN(d.getTime()) ? "Just now" : d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            type: log.status === "ON" ? "info" : "gray"
+          };
+        });
         setNotifications(formatted);
       } catch (e) {}
     }

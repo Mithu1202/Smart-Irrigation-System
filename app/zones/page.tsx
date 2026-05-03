@@ -156,7 +156,7 @@ function ZoneDetailsModal({ zone, onClose, onTogglePump }: { zone: Zone; onClose
             </div>
             <div className="bg-gray-50 dark:bg-slate-700/50 p-4 rounded-[16px]">
               <p className="text-gray-400 dark:text-gray-500 font-bold mb-1">Area Size</p>
-              <p className="font-extrabold text-[15px] md:text-lg">{zone.area}</p>
+              <p className="font-extrabold text-[15px] md:text-lg">Testing Pot (0.5m²)</p>
             </div>
           </div>
 

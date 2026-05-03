@@ -153,26 +153,34 @@ function SummaryCard({ title, value, subtitle, icon, color }: { title: string; v
   );
 }
 
-function WaterSavingsCard({ stats }: { stats: ReportStats | null }) {
-  const savings = stats?.savings?.waterSaved || 0;
-  const liters = stats?.savings?.estimatedLiters || 0;
-  const pumpOnTime = stats?.last24h?.pumpOnTime || 0;
-  const avgMoisture = stats?.last24h?.avgMoisture || 0;
+function WaterSavingsCard({ stats, latestData }: { stats: ReportStats | null, latestData: any }) {
+  // Small-scale calculations (for testing/single plant)
+  const pumpOnTime = stats?.last24h?.pumpOnTime || (latestData?.pump_status === "ON" ? 1 : 0);
+  const avgMoisture = stats?.last24h?.avgMoisture || latestData?.soil_moisture || 50;
+  
+  // Scale: 150ml per minute flow rate (Small 5V pump)
+  const FLOW_RATE = 0.15; 
+  const litersUsed = (pumpOnTime * FLOW_RATE).toFixed(2);
+  
+  // Baseline: 5 mins manual watering per day
+  const baselineLiters = 5 * FLOW_RATE; 
+  const litersSaved = Math.max(0, baselineLiters - parseFloat(litersUsed)).toFixed(2);
+  const savingsPct = Math.round((parseFloat(litersSaved) / baselineLiters) * 100);
 
   return (
     <div className="bg-gradient-to-br from-[#3CC15A] to-[#2DA44E] rounded-2xl p-6 text-white">
       <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
-        Water Usage Insights
+        Plant Health Insights
       </h3>
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <div className="text-[32px] font-extrabold">{liters}L</div>
-          <div className="text-white/80 text-[13px]">Estimated saved</div>
+          <div className="text-[32px] font-extrabold">{litersSaved}L</div>
+          <div className="text-white/80 text-[13px]">Water Saved Today</div>
         </div>
         <div>
-          <div className="text-[32px] font-extrabold">{savings}%</div>
-          <div className="text-white/80 text-[13px]">Savings vs manual</div>
+          <div className="text-[32px] font-extrabold">{savingsPct}%</div>
+          <div className="text-white/80 text-[13px]">AI Efficiency</div>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 mb-4 pt-4 border-t border-white/20">
@@ -182,7 +190,7 @@ function WaterSavingsCard({ stats }: { stats: ReportStats | null }) {
         </div>
         <div>
           <div className="text-[18px] font-bold">{avgMoisture}%</div>
-          <div className="text-white/70 text-[11px]">Avg moisture (24h)</div>
+          <div className="text-white/70 text-[11px]">Current Moisture</div>
         </div>
       </div>
       <div className="bg-white/20 rounded-xl p-4">
@@ -306,10 +314,10 @@ function IrrigationHistoryCard({ events }: { events: IrrigationEvent[] }) {
               </div>
               <div className="text-right">
                 <div className="text-[11px] font-medium text-gray-600">
-                  {new Date(event.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+                  {isNaN(new Date(event.timestamp).getTime()) ? "N/A" : new Date(event.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
                 </div>
                 <div className="text-[10px] text-gray-400">
-                  {new Date(event.timestamp).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  {isNaN(new Date(event.timestamp).getTime()) ? "Just now" : new Date(event.timestamp).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                 </div>
               </div>
             </div>
@@ -350,7 +358,7 @@ function AlertsHistoryCard({ alerts }: { alerts: AlertData[] }) {
               </div>
               <div className="text-right shrink-0">
                 <div className="text-[10px] font-medium text-gray-500">
-                  {new Date(alert.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+                  {isNaN(new Date(alert.timestamp).getTime()) ? "N/A" : new Date(alert.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
                 </div>
                 <div className="text-[10px] text-gray-400">{alert.zone}</div>
               </div>
@@ -493,7 +501,7 @@ export default function ReportsPage() {
 
         {/* Right Sidebar - Water Savings */}
         <div className="space-y-4">
-          <WaterSavingsCard stats={stats} />
+          <WaterSavingsCard stats={stats} latestData={latestData} />
         </div>
       </div>
 
