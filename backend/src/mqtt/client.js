@@ -92,4 +92,22 @@ client.on("message", async (topic, message) => {
   }
 });
 
+// Add pump command publisher
+client.publishPumpCommand = (deviceId, pumpActive) => {
+  // Always publish to zone A control topic for now, matching the ESP32 subscription
+  const topic = "smart_irrigation/control/A"; 
+  const payload = JSON.stringify({
+    command: pumpActive ? "ON" : "OFF",
+    device_id: deviceId
+  });
+  
+  client.publish(topic, payload, { qos: 1 }, (err) => {
+    if (err) {
+      console.error("❌ MQTT Publish Error:", err);
+    } else {
+      console.log(`✅ MQTT Published to ${topic}: ${payload}`);
+    }
+  });
+};
+
 module.exports = client;
