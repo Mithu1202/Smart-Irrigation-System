@@ -297,4 +297,58 @@ export const getIrrigationLogs = async (
   return res.data;
 };
 
+// ==================== IoT ML API ====================
+
+export interface IoTForecastResponse {
+  success: boolean;
+  zoneId: string;
+  current_moisture: number;
+  timestamp: string;
+  forecast: number[];                // 6-step recursive moisture forecast
+  next_moisture: number;             // t+1 regression prediction
+  next_moisture_change?: number;     // delta vs current moisture
+  irrigation_needed: boolean;        // threshold-tuned classification
+  irrigation_probability: number;    // raw probability
+  alert_level: "none" | "low" | "medium" | "high";
+  recommendation: string;
+  model?: { reg: string; clf: string; threshold: number };
+  error?: string;
+}
+
+export interface IoTModelStatus {
+  modelTrained: boolean;
+  message: string;
+  metadata?: {
+    trained_at: string;
+    reg_model: string;
+    reg_rmse: number;
+    reg_r2: number;
+    clf_model: string;
+    clf_f1: number;
+    clf_recall: number;
+    optimal_threshold: number;
+    n_samples: number;
+    irrigation_rate: number;
+  };
+}
+
+export const getIoTForecast = async (zoneId: string): Promise<IoTForecastResponse> => {
+  const res = await api.get(`/ml/iot-forecast/${zoneId}`);
+  return res.data;
+};
+
+export const getIoTModelStatus = async (): Promise<IoTModelStatus> => {
+  const res = await api.get("/ml/iot-status");
+  return res.data;
+};
+
+export const triggerIoTPredict = async (sensorData: Record<string, unknown>): Promise<IoTForecastResponse> => {
+  const res = await api.post("/ml/iot-predict", sensorData);
+  return res.data;
+};
+
+export const triggerIoTTraining = async (): Promise<void> => {
+  await api.post("/ml/iot-train");
+};
+
 export default api;

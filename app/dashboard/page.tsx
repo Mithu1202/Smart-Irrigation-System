@@ -24,6 +24,7 @@ import {
 import { getEnrichedData, getIrrigationLogs, getLatestData, getZones, togglePump, type EnrichedReading, type IrrigationLogsResponse } from "../../lib/api";
 import { useSocket, SensorData } from "../../lib/useSocket";
 import AgentPanel from "../components/agent/AgentPanel";
+import MLInsightPanel from "../components/dashboard/MLInsightPanel";
 
 const MapWrapper = dynamic(() => import("../components/zones/MapWrapper"), {
   ssr: false,
@@ -781,6 +782,13 @@ export default function DashboardPage() {
           </div>
 
           <div className="xl:col-span-4 space-y-5">
+            <MLInsightPanel
+              zoneId={activeZoneId}
+              currentMoisture={avgMoisture}
+              temperature={temperature}
+              humidity={humidity}
+              pumpStatus={pumpStatus}
+            />
             <AgentPanel zone={activeZoneId} compact />
           </div>
         </div>
