@@ -131,6 +131,7 @@ const createDocumentText = (row) => {
     row.description,
     row.recommendation,
     row.crop,
+    row.category,
     `soil moisture ${numeric.soilMoisture}`,
     `temperature ${numeric.temperature}`,
     `humidity ${numeric.humidity}`,
