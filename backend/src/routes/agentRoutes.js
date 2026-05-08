@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/query", async (req, res) => {
   try {
-    const { question, zone, systemCost, costPerLiter, litersPerReading } = req.body || {};
+    const { question, zone, systemCost, costPerLiter, litersPerReading, sessionId } = req.body || {};
 
     if (!question || !String(question).trim()) {
       return res.status(400).json({ error: "question is required" });
@@ -18,6 +18,7 @@ router.post("/query", async (req, res) => {
       systemCost,
       costPerLiter,
       litersPerReading,
+      sessionId,
     });
 
     res.json(result);

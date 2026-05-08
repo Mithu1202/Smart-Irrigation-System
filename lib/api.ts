@@ -89,19 +89,21 @@ export interface AgentQueryResponse {
   reason: string;
   action: string;
   confidence: number;
-  riskLevel: "LOW" | "MEDIUM" | "HIGH";
+  riskLevel: "LOW" | "MEDIUM" | "HIGH" | "NONE";
   answer?: string;
   assistantMessage?: string;
-  mode?: "decision" | "logs" | "guidance" | "crop" | "qa" | "roi";
+  mode?: "greeting" | "off_topic" | "irrigation" | "crop_suitability" | "logs" | "roi" | "trend" | "risk" | "pest_disease" | "fertilizer" | "weather" | "harvest" | "general_agriculture";
   openRouter?: {
     configured: boolean;
     model: string;
   };
   llmOutput?: {
+    answer?: string;
     decision?: string;
     reason?: string;
     action?: string;
     summary?: string;
+    evidence?: string[];
     nextSteps?: string[];
     [key: string]: unknown;
   } | null;
@@ -254,6 +256,17 @@ export const getROIAnalysis = async (
   return res.data;
 };
 
+// Generate a persistent session ID for conversation memory
+const getSessionId = (): string => {
+  if (typeof window === "undefined") return "server";
+  let sid = sessionStorage.getItem("agribot_session_id");
+  if (!sid) {
+    sid = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    sessionStorage.setItem("agribot_session_id", sid);
+  }
+  return sid;
+};
+
 export const queryAgent = async (
   question: string,
   options?: {
@@ -265,6 +278,7 @@ export const queryAgent = async (
 ): Promise<AgentQueryResponse> => {
   const res = await api.post("/agent/query", {
     question,
+    sessionId: getSessionId(),
     ...options,
   });
   return res.data;

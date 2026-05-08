@@ -1,93 +1,944 @@
 {
   "dimension": 128,
-  "count": 5,
+  "count": 52,
   "csvPath": "D:\\AI&ML\\Smart-Irrigation-System\\backend\\data\\irrigation_knowledge.csv",
-  "generatedAt": "2026-05-02T17:20:59.522Z",
+  "generatedAt": "2026-05-08T16:40:39.771Z",
   "documents": [
     {
       "id": "1",
       "crop": "Rice",
-      "description": "Rice responds well to steady moisture and cooler field temperatures.",
-      "recommendation": "Irrigate when moisture falls below the crop threshold and the trend is declining.",
-      "soil_moisture": "38",
+      "description": "Rice is a staple cereal crop that thrives in flooded paddy fields with consistently high soil moisture. Ideal growing temperature is 25-35°C with high humidity.",
+      "recommendation": "Maintain standing water in paddies during vegetative growth. Irrigate when soil moisture drops below 40%. Drain fields 2 weeks before harvest.",
+      "soil_moisture": "45",
       "temp": "30",
-      "humidity": "68",
-      "rainfall": "5",
+      "humidity": "75",
+      "rainfall": "12",
+      "category": "cereal",
       "normalized": {
-        "soilMoisture": 38,
+        "soilMoisture": 45,
         "temperature": 30,
-        "humidity": 68,
-        "rainfall": 5
+        "humidity": 75,
+        "rainfall": 12
       },
-      "text": "Rice responds well to steady moisture and cooler field temperatures. Irrigate when moisture falls below the crop threshold and the trend is declining. Rice soil moisture 38 temperature 30 humidity 68 rainfall 5"
+      "text": "Rice is a staple cereal crop that thrives in flooded paddy fields with consistently high soil moisture. Ideal growing temperature is 25-35°C with high humidity. Maintain standing water in paddies during vegetative growth. Irrigate when soil moisture drops below 40%. Drain fields 2 weeks before harvest. Rice cereal soil moisture 45 temperature 30 humidity 75 rainfall 12"
     },
     {
       "id": "2",
       "crop": "Tomato",
-      "description": "Tomato plants are sensitive to dry spells during flowering.",
-      "recommendation": "Prioritize irrigation when soil moisture drops quickly and humidity is low.",
+      "description": "Tomato plants are sensitive to moisture fluctuations especially during flowering and fruit set. They prefer well-drained soil with moderate moisture.",
+      "recommendation": "Irrigate when soil moisture falls below 28%. Use drip irrigation to avoid leaf wetting. Reduce watering during fruit ripening to improve flavor.",
       "soil_moisture": "28",
-      "temp": "32",
-      "humidity": "52",
-      "rainfall": "2",
+      "temp": "28",
+      "humidity": "55",
+      "rainfall": "3",
+      "category": "vegetable",
       "normalized": {
         "soilMoisture": 28,
-        "temperature": 32,
-        "humidity": 52,
-        "rainfall": 2
+        "temperature": 28,
+        "humidity": 55,
+        "rainfall": 3
       },
-      "text": "Tomato plants are sensitive to dry spells during flowering. Prioritize irrigation when soil moisture drops quickly and humidity is low. Tomato soil moisture 28 temperature 32 humidity 52 rainfall 2"
+      "text": "Tomato plants are sensitive to moisture fluctuations especially during flowering and fruit set. They prefer well-drained soil with moderate moisture. Irrigate when soil moisture falls below 28%. Use drip irrigation to avoid leaf wetting. Reduce watering during fruit ripening to improve flavor. Tomato vegetable soil moisture 28 temperature 28 humidity 55 rainfall 3"
     },
     {
       "id": "3",
       "crop": "Chili",
-      "description": "Chili plants prefer moderate moisture with good drainage.",
-      "recommendation": "Use shorter irrigation cycles when rainfall has already contributed water.",
-      "soil_moisture": "34",
+      "description": "Chili pepper plants prefer moderate moisture with excellent drainage. Overwatering causes root rot and reduced capsaicin production.",
+      "recommendation": "Use short irrigation cycles when rainfall has contributed moisture. Target soil moisture of 30-35%. Mulch to retain moisture in hot weather.",
+      "soil_moisture": "32",
       "temp": "31",
       "humidity": "58",
-      "rainfall": "8",
+      "rainfall": "5",
+      "category": "vegetable",
       "normalized": {
-        "soilMoisture": 34,
+        "soilMoisture": 32,
         "temperature": 31,
         "humidity": 58,
-        "rainfall": 8
+        "rainfall": 5
       },
-      "text": "Chili plants prefer moderate moisture with good drainage. Use shorter irrigation cycles when rainfall has already contributed water. Chili soil moisture 34 temperature 31 humidity 58 rainfall 8"
+      "text": "Chili pepper plants prefer moderate moisture with excellent drainage. Overwatering causes root rot and reduced capsaicin production. Use short irrigation cycles when rainfall has contributed moisture. Target soil moisture of 30-35%. Mulch to retain moisture in hot weather. Chili vegetable soil moisture 32 temperature 31 humidity 58 rainfall 5"
     },
     {
       "id": "4",
       "crop": "Leafy Greens",
-      "description": "Leafy greens need frequent but light watering.",
-      "recommendation": "Check the 24h average moisture before turning the pump on.",
-      "soil_moisture": "42",
-      "temp": "26",
-      "humidity": "73",
-      "rainfall": "4",
+      "description": "Leafy greens like lettuce and spinach need frequent but light watering. They are shallow-rooted and wilt quickly in dry conditions.",
+      "recommendation": "Check the 24-hour average moisture before irrigating. Keep soil moisture above 42%. Provide shade cloth when temperatures exceed 30°C.",
+      "soil_moisture": "44",
+      "temp": "24",
+      "humidity": "70",
+      "rainfall": "6",
+      "category": "vegetable",
       "normalized": {
-        "soilMoisture": 42,
-        "temperature": 26,
-        "humidity": 73,
-        "rainfall": 4
+        "soilMoisture": 44,
+        "temperature": 24,
+        "humidity": 70,
+        "rainfall": 6
       },
-      "text": "Leafy greens need frequent but light watering. Check the 24h average moisture before turning the pump on. Leafy Greens soil moisture 42 temperature 26 humidity 73 rainfall 4"
+      "text": "Leafy greens like lettuce and spinach need frequent but light watering. They are shallow-rooted and wilt quickly in dry conditions. Check the 24-hour average moisture before irrigating. Keep soil moisture above 42%. Provide shade cloth when temperatures exceed 30°C. Leafy Greens vegetable soil moisture 44 temperature 24 humidity 70 rainfall 6"
     },
     {
       "id": "5",
       "crop": "Maize",
-      "description": "Maize can tolerate brief dry periods but not sustained stress.",
-      "recommendation": "Activate irrigation when the threshold gap becomes strongly negative.",
-      "soil_moisture": "24",
-      "temp": "35",
-      "humidity": "45",
-      "rainfall": "1",
+      "description": "Maize (corn) can tolerate brief dry periods but sustained water stress during tasseling reduces yield dramatically.",
+      "recommendation": "Activate irrigation when threshold gap becomes strongly negative. Critical irrigation period is during silking and grain fill stages.",
+      "soil_moisture": "26",
+      "temp": "33",
+      "humidity": "48",
+      "rainfall": "2",
+      "category": "cereal",
       "normalized": {
-        "soilMoisture": 24,
-        "temperature": 35,
-        "humidity": 45,
-        "rainfall": 1
+        "soilMoisture": 26,
+        "temperature": 33,
+        "humidity": 48,
+        "rainfall": 2
       },
-      "text": "Maize can tolerate brief dry periods but not sustained stress. Activate irrigation when the threshold gap becomes strongly negative. Maize soil moisture 24 temperature 35 humidity 45 rainfall 1"
+      "text": "Maize (corn) can tolerate brief dry periods but sustained water stress during tasseling reduces yield dramatically. Activate irrigation when threshold gap becomes strongly negative. Critical irrigation period is during silking and grain fill stages. Maize cereal soil moisture 26 temperature 33 humidity 48 rainfall 2"
+    },
+    {
+      "id": "6",
+      "crop": "Sugarcane",
+      "description": "Sugarcane is a high-water-demand crop requiring consistent moisture throughout its 12-18 month growth cycle. Drought stress reduces sucrose content.",
+      "recommendation": "Irrigate every 7-10 days during dry periods. Soil moisture should not drop below 35%. Reduce irrigation 4-6 weeks before harvest to increase sugar content.",
+      "soil_moisture": "40",
+      "temp": "32",
+      "humidity": "65",
+      "rainfall": "8",
+      "category": "cash_crop",
+      "normalized": {
+        "soilMoisture": 40,
+        "temperature": 32,
+        "humidity": 65,
+        "rainfall": 8
+      },
+      "text": "Sugarcane is a high-water-demand crop requiring consistent moisture throughout its 12-18 month growth cycle. Drought stress reduces sucrose content. Irrigate every 7-10 days during dry periods. Soil moisture should not drop below 35%. Reduce irrigation 4-6 weeks before harvest to increase sugar content. Sugarcane cash_crop soil moisture 40 temperature 32 humidity 65 rainfall 8"
+    },
+    {
+      "id": "7",
+      "crop": "Tea",
+      "description": "Tea plants require consistent moisture and thrive in cool highland climates. Water stress reduces leaf quality and yield of tender shoots.",
+      "recommendation": "Maintain soil moisture between 35-50%. Use sprinkler irrigation during dry spells. Mulch with tea prunings to conserve moisture.",
+      "soil_moisture": "42",
+      "temp": "22",
+      "humidity": "80",
+      "rainfall": "10",
+      "category": "plantation",
+      "normalized": {
+        "soilMoisture": 42,
+        "temperature": 22,
+        "humidity": 80,
+        "rainfall": 10
+      },
+      "text": "Tea plants require consistent moisture and thrive in cool highland climates. Water stress reduces leaf quality and yield of tender shoots. Maintain soil moisture between 35-50%. Use sprinkler irrigation during dry spells. Mulch with tea prunings to conserve moisture. Tea plantation soil moisture 42 temperature 22 humidity 80 rainfall 10"
+    },
+    {
+      "id": "8",
+      "crop": "Coconut",
+      "description": "Coconut palms are drought-tolerant once established but young palms need regular irrigation. Nut production increases with adequate moisture.",
+      "recommendation": "Irrigate young palms during dry season. For mature palms, provide basin irrigation when soil moisture drops below 25%. Drip irrigation is most efficient.",
+      "soil_moisture": "30",
+      "temp": "29",
+      "humidity": "72",
+      "rainfall": "7",
+      "category": "plantation",
+      "normalized": {
+        "soilMoisture": 30,
+        "temperature": 29,
+        "humidity": 72,
+        "rainfall": 7
+      },
+      "text": "Coconut palms are drought-tolerant once established but young palms need regular irrigation. Nut production increases with adequate moisture. Irrigate young palms during dry season. For mature palms, provide basin irrigation when soil moisture drops below 25%. Drip irrigation is most efficient. Coconut plantation soil moisture 30 temperature 29 humidity 72 rainfall 7"
+    },
+    {
+      "id": "9",
+      "crop": "Banana",
+      "description": "Banana plants have high water requirements due to large leaf surface area. They are very sensitive to drought during bunch development.",
+      "recommendation": "Irrigate twice weekly during dry periods. Maintain soil moisture above 38%. Use mulch to retain moisture. Avoid waterlogging which causes root rot.",
+      "soil_moisture": "42",
+      "temp": "28",
+      "humidity": "78",
+      "rainfall": "9",
+      "category": "fruit",
+      "normalized": {
+        "soilMoisture": 42,
+        "temperature": 28,
+        "humidity": 78,
+        "rainfall": 9
+      },
+      "text": "Banana plants have high water requirements due to large leaf surface area. They are very sensitive to drought during bunch development. Irrigate twice weekly during dry periods. Maintain soil moisture above 38%. Use mulch to retain moisture. Avoid waterlogging which causes root rot. Banana fruit soil moisture 42 temperature 28 humidity 78 rainfall 9"
+    },
+    {
+      "id": "10",
+      "crop": "Onion",
+      "description": "Onion has shallow roots and requires frequent light irrigation. Overwatering during bulb maturation causes splitting and storage rot.",
+      "recommendation": "Irrigate when top 15cm of soil dries. Keep moisture at 25-30% during bulb formation. Stop irrigation 2 weeks before harvest for better curing.",
+      "soil_moisture": "27",
+      "temp": "26",
+      "humidity": "55",
+      "rainfall": "2",
+      "category": "vegetable",
+      "normalized": {
+        "soilMoisture": 27,
+        "temperature": 26,
+        "humidity": 55,
+        "rainfall": 2
+      },
+      "text": "Onion has shallow roots and requires frequent light irrigation. Overwatering during bulb maturation causes splitting and storage rot. Irrigate when top 15cm of soil dries. Keep moisture at 25-30% during bulb formation. Stop irrigation 2 weeks before harvest for better curing. Onion vegetable soil moisture 27 temperature 26 humidity 55 rainfall 2"
+    },
+    {
+      "id": "11",
+      "crop": "Potato",
+      "description": "Potato tubers need consistent moisture during tuber initiation and bulking. Water stress causes knobby or cracked tubers.",
+      "recommendation": "Irrigate to maintain soil moisture between 30-40%. Avoid wet-dry cycles which cause growth cracks. Hill up soil to protect developing tubers.",
+      "soil_moisture": "35",
+      "temp": "20",
+      "humidity": "65",
+      "rainfall": "5",
+      "category": "tuber",
+      "normalized": {
+        "soilMoisture": 35,
+        "temperature": 20,
+        "humidity": 65,
+        "rainfall": 5
+      },
+      "text": "Potato tubers need consistent moisture during tuber initiation and bulking. Water stress causes knobby or cracked tubers. Irrigate to maintain soil moisture between 30-40%. Avoid wet-dry cycles which cause growth cracks. Hill up soil to protect developing tubers. Potato tuber soil moisture 35 temperature 20 humidity 65 rainfall 5"
+    },
+    {
+      "id": "12",
+      "crop": "Carrot",
+      "description": "Carrots need deep consistent moisture for straight root development. Irregular watering causes forking and cracking.",
+      "recommendation": "Maintain soil moisture at 30-35% consistently. Use drip irrigation. Avoid surface crusting by light frequent watering during germination.",
+      "soil_moisture": "32",
+      "temp": "22",
+      "humidity": "60",
+      "rainfall": "4",
+      "category": "root_vegetable",
+      "normalized": {
+        "soilMoisture": 32,
+        "temperature": 22,
+        "humidity": 60,
+        "rainfall": 4
+      },
+      "text": "Carrots need deep consistent moisture for straight root development. Irregular watering causes forking and cracking. Maintain soil moisture at 30-35% consistently. Use drip irrigation. Avoid surface crusting by light frequent watering during germination. Carrot root_vegetable soil moisture 32 temperature 22 humidity 60 rainfall 4"
+    },
+    {
+      "id": "13",
+      "crop": "Cabbage",
+      "description": "Cabbage needs steady moisture throughout growth. Water stress during head formation leads to small loose heads and bolting.",
+      "recommendation": "Irrigate when soil moisture drops below 35%. Apply 25-30mm per week. Use furrow or drip irrigation to minimize head rot diseases.",
+      "soil_moisture": "38",
+      "temp": "20",
+      "humidity": "68",
+      "rainfall": "5",
+      "category": "vegetable",
+      "normalized": {
+        "soilMoisture": 38,
+        "temperature": 20,
+        "humidity": 68,
+        "rainfall": 5
+      },
+      "text": "Cabbage needs steady moisture throughout growth. Water stress during head formation leads to small loose heads and bolting. Irrigate when soil moisture drops below 35%. Apply 25-30mm per week. Use furrow or drip irrigation to minimize head rot diseases. Cabbage vegetable soil moisture 38 temperature 20 humidity 68 rainfall 5"
+    },
+    {
+      "id": "14",
+      "crop": "Bean",
+      "description": "Green beans and dry beans are moderately drought tolerant but need irrigation during flowering and pod fill for good yields.",
+      "recommendation": "Irrigate when soil moisture falls below 25%. Critical period is flowering through pod fill. Avoid overhead irrigation to prevent foliar diseases.",
+      "soil_moisture": "28",
+      "temp": "25",
+      "humidity": "58",
+      "rainfall": "3",
+      "category": "legume",
+      "normalized": {
+        "soilMoisture": 28,
+        "temperature": 25,
+        "humidity": 58,
+        "rainfall": 3
+      },
+      "text": "Green beans and dry beans are moderately drought tolerant but need irrigation during flowering and pod fill for good yields. Irrigate when soil moisture falls below 25%. Critical period is flowering through pod fill. Avoid overhead irrigation to prevent foliar diseases. Bean legume soil moisture 28 temperature 25 humidity 58 rainfall 3"
+    },
+    {
+      "id": "15",
+      "crop": "Groundnut",
+      "description": "Groundnut (peanut) needs well-drained soil with moderate moisture. Critical water periods are flowering and peg penetration.",
+      "recommendation": "Irrigate to maintain 25-35% soil moisture. Ensure adequate moisture during pegging stage. Reduce irrigation near harvest for easier lifting.",
+      "soil_moisture": "30",
+      "temp": "30",
+      "humidity": "55",
+      "rainfall": "4",
+      "category": "legume",
+      "normalized": {
+        "soilMoisture": 30,
+        "temperature": 30,
+        "humidity": 55,
+        "rainfall": 4
+      },
+      "text": "Groundnut (peanut) needs well-drained soil with moderate moisture. Critical water periods are flowering and peg penetration. Irrigate to maintain 25-35% soil moisture. Ensure adequate moisture during pegging stage. Reduce irrigation near harvest for easier lifting. Groundnut legume soil moisture 30 temperature 30 humidity 55 rainfall 4"
+    },
+    {
+      "id": "16",
+      "crop": "Soybean",
+      "description": "Soybean is moderately drought tolerant but yields drop significantly when water stress occurs during pod filling stage.",
+      "recommendation": "Irrigate when soil moisture drops below 30%. Critical period is R3-R5 (pod development). Soybeans fix nitrogen so coordinate with fertilizer plan.",
+      "soil_moisture": "32",
+      "temp": "28",
+      "humidity": "60",
+      "rainfall": "3",
+      "category": "legume",
+      "normalized": {
+        "soilMoisture": 32,
+        "temperature": 28,
+        "humidity": 60,
+        "rainfall": 3
+      },
+      "text": "Soybean is moderately drought tolerant but yields drop significantly when water stress occurs during pod filling stage. Irrigate when soil moisture drops below 30%. Critical period is R3-R5 (pod development). Soybeans fix nitrogen so coordinate with fertilizer plan. Soybean legume soil moisture 32 temperature 28 humidity 60 rainfall 3"
+    },
+    {
+      "id": "17",
+      "crop": "Cucumber",
+      "description": "Cucumber plants have high water needs and shallow roots. Irregular watering causes bitter fruit and poor shape.",
+      "recommendation": "Maintain consistent soil moisture above 35%. Use drip irrigation with mulch. Irrigate daily during fruit production in hot weather.",
+      "soil_moisture": "38",
+      "temp": "27",
+      "humidity": "70",
+      "rainfall": "4",
+      "category": "vegetable",
+      "normalized": {
+        "soilMoisture": 38,
+        "temperature": 27,
+        "humidity": 70,
+        "rainfall": 4
+      },
+      "text": "Cucumber plants have high water needs and shallow roots. Irregular watering causes bitter fruit and poor shape. Maintain consistent soil moisture above 35%. Use drip irrigation with mulch. Irrigate daily during fruit production in hot weather. Cucumber vegetable soil moisture 38 temperature 27 humidity 70 rainfall 4"
+    },
+    {
+      "id": "18",
+      "crop": "Watermelon",
+      "description": "Watermelon needs deep but infrequent irrigation. Overwatering during ripening dilutes sugar content and causes fruit splitting.",
+      "recommendation": "Irrigate deeply when soil moisture drops below 25%. Reduce watering by 50% two weeks before harvest to concentrate sugars.",
+      "soil_moisture": "28",
+      "temp": "32",
+      "humidity": "50",
+      "rainfall": "2",
+      "category": "fruit",
+      "normalized": {
+        "soilMoisture": 28,
+        "temperature": 32,
+        "humidity": 50,
+        "rainfall": 2
+      },
+      "text": "Watermelon needs deep but infrequent irrigation. Overwatering during ripening dilutes sugar content and causes fruit splitting. Irrigate deeply when soil moisture drops below 25%. Reduce watering by 50% two weeks before harvest to concentrate sugars. Watermelon fruit soil moisture 28 temperature 32 humidity 50 rainfall 2"
+    },
+    {
+      "id": "19",
+      "crop": "Okra",
+      "description": "Okra is heat-loving and moderately drought tolerant. It performs well in tropical climates with adequate moisture.",
+      "recommendation": "Irrigate when soil moisture falls below 30%. Okra tolerates heat well but needs consistent moisture during flowering for continuous pod production.",
+      "soil_moisture": "32",
+      "temp": "34",
+      "humidity": "55",
+      "rainfall": "3",
+      "category": "vegetable",
+      "normalized": {
+        "soilMoisture": 32,
+        "temperature": 34,
+        "humidity": 55,
+        "rainfall": 3
+      },
+      "text": "Okra is heat-loving and moderately drought tolerant. It performs well in tropical climates with adequate moisture. Irrigate when soil moisture falls below 30%. Okra tolerates heat well but needs consistent moisture during flowering for continuous pod production. Okra vegetable soil moisture 32 temperature 34 humidity 55 rainfall 3"
+    },
+    {
+      "id": "20",
+      "crop": "Eggplant",
+      "description": "Eggplant (brinjal) needs warm conditions and consistent moisture. Water stress causes flower drop and small bitter fruits.",
+      "recommendation": "Maintain soil moisture at 30-38%. Use mulch to keep soil temperature stable. Irrigate every 3-4 days during fruiting stage.",
+      "soil_moisture": "35",
+      "temp": "30",
+      "humidity": "62",
+      "rainfall": "4",
+      "category": "vegetable",
+      "normalized": {
+        "soilMoisture": 35,
+        "temperature": 30,
+        "humidity": 62,
+        "rainfall": 4
+      },
+      "text": "Eggplant (brinjal) needs warm conditions and consistent moisture. Water stress causes flower drop and small bitter fruits. Maintain soil moisture at 30-38%. Use mulch to keep soil temperature stable. Irrigate every 3-4 days during fruiting stage. Eggplant vegetable soil moisture 35 temperature 30 humidity 62 rainfall 4"
+    },
+    {
+      "id": "21",
+      "crop": "Pumpkin",
+      "description": "Pumpkin is a spreading vine crop that needs deep watering. Shallow frequent watering encourages surface roots.",
+      "recommendation": "Water deeply once or twice per week. Maintain soil moisture at 28-35%. Reduce irrigation as fruits mature to improve storage quality.",
+      "soil_moisture": "32",
+      "temp": "28",
+      "humidity": "58",
+      "rainfall": "5",
+      "category": "vegetable",
+      "normalized": {
+        "soilMoisture": 32,
+        "temperature": 28,
+        "humidity": 58,
+        "rainfall": 5
+      },
+      "text": "Pumpkin is a spreading vine crop that needs deep watering. Shallow frequent watering encourages surface roots. Water deeply once or twice per week. Maintain soil moisture at 28-35%. Reduce irrigation as fruits mature to improve storage quality. Pumpkin vegetable soil moisture 32 temperature 28 humidity 58 rainfall 5"
+    },
+    {
+      "id": "22",
+      "crop": "Sweet Potato",
+      "description": "Sweet potato is drought tolerant once established but needs moisture during root initiation. Excess water reduces tuber quality.",
+      "recommendation": "Irrigate during first 6 weeks after planting. Maintain soil moisture at 25-30% during root bulking. Avoid waterlogging which causes rot.",
+      "soil_moisture": "28",
+      "temp": "27",
+      "humidity": "65",
+      "rainfall": "4",
+      "category": "tuber",
+      "normalized": {
+        "soilMoisture": 28,
+        "temperature": 27,
+        "humidity": 65,
+        "rainfall": 4
+      },
+      "text": "Sweet potato is drought tolerant once established but needs moisture during root initiation. Excess water reduces tuber quality. Irrigate during first 6 weeks after planting. Maintain soil moisture at 25-30% during root bulking. Avoid waterlogging which causes rot. Sweet Potato tuber soil moisture 28 temperature 27 humidity 65 rainfall 4"
+    },
+    {
+      "id": "23",
+      "crop": "Cassava",
+      "description": "Cassava is extremely drought tolerant and can survive extended dry periods. However adequate moisture increases root starch content.",
+      "recommendation": "Irrigate during establishment phase only in severe drought. Cassava rarely needs supplemental irrigation once established.",
+      "soil_moisture": "20",
+      "temp": "29",
+      "humidity": "55",
+      "rainfall": "3",
+      "category": "tuber",
+      "normalized": {
+        "soilMoisture": 20,
+        "temperature": 29,
+        "humidity": 55,
+        "rainfall": 3
+      },
+      "text": "Cassava is extremely drought tolerant and can survive extended dry periods. However adequate moisture increases root starch content. Irrigate during establishment phase only in severe drought. Cassava rarely needs supplemental irrigation once established. Cassava tuber soil moisture 20 temperature 29 humidity 55 rainfall 3"
+    },
+    {
+      "id": "24",
+      "crop": "Mango",
+      "description": "Mango trees need water stress during flowering to promote fruit set. Irrigation during fruit development increases size and quality.",
+      "recommendation": "Withhold irrigation 2 months before expected flowering. Resume irrigation after fruit set. Apply 100-150 liters per tree per week during fruit development.",
+      "soil_moisture": "25",
+      "temp": "32",
+      "humidity": "60",
+      "rainfall": "4",
+      "category": "fruit",
+      "normalized": {
+        "soilMoisture": 25,
+        "temperature": 32,
+        "humidity": 60,
+        "rainfall": 4
+      },
+      "text": "Mango trees need water stress during flowering to promote fruit set. Irrigation during fruit development increases size and quality. Withhold irrigation 2 months before expected flowering. Resume irrigation after fruit set. Apply 100-150 liters per tree per week during fruit development. Mango fruit soil moisture 25 temperature 32 humidity 60 rainfall 4"
+    },
+    {
+      "id": "25",
+      "crop": "Papaya",
+      "description": "Papaya trees are fast-growing and need consistent moisture. They cannot tolerate waterlogging which causes root rot and stem collapse.",
+      "recommendation": "Irrigate every 3-4 days in dry weather. Maintain soil moisture at 35-40%. Ensure excellent drainage. Apply mulch around the base.",
+      "soil_moisture": "38",
+      "temp": "30",
+      "humidity": "72",
+      "rainfall": "6",
+      "category": "fruit",
+      "normalized": {
+        "soilMoisture": 38,
+        "temperature": 30,
+        "humidity": 72,
+        "rainfall": 6
+      },
+      "text": "Papaya trees are fast-growing and need consistent moisture. They cannot tolerate waterlogging which causes root rot and stem collapse. Irrigate every 3-4 days in dry weather. Maintain soil moisture at 35-40%. Ensure excellent drainage. Apply mulch around the base. Papaya fruit soil moisture 38 temperature 30 humidity 72 rainfall 6"
+    },
+    {
+      "id": "26",
+      "crop": "Guava",
+      "description": "Guava is a hardy fruit tree that tolerates various soil moisture conditions. Regulated deficit irrigation improves fruit sweetness.",
+      "recommendation": "Irrigate when soil moisture drops below 25%. Withhold water partially before harvest to improve fruit quality and shelf life.",
+      "soil_moisture": "28",
+      "temp": "28",
+      "humidity": "60",
+      "rainfall": "4",
+      "category": "fruit",
+      "normalized": {
+        "soilMoisture": 28,
+        "temperature": 28,
+        "humidity": 60,
+        "rainfall": 4
+      },
+      "text": "Guava is a hardy fruit tree that tolerates various soil moisture conditions. Regulated deficit irrigation improves fruit sweetness. Irrigate when soil moisture drops below 25%. Withhold water partially before harvest to improve fruit quality and shelf life. Guava fruit soil moisture 28 temperature 28 humidity 60 rainfall 4"
+    },
+    {
+      "id": "27",
+      "crop": "Passion Fruit",
+      "description": "Passion fruit vines need consistent moisture but are susceptible to root diseases in waterlogged soils.",
+      "recommendation": "Maintain soil moisture at 30-38%. Use trellised drip irrigation. Ensure good drainage. Mulch vine base to regulate soil temperature.",
+      "soil_moisture": "35",
+      "temp": "26",
+      "humidity": "70",
+      "rainfall": "6",
+      "category": "fruit",
+      "normalized": {
+        "soilMoisture": 35,
+        "temperature": 26,
+        "humidity": 70,
+        "rainfall": 6
+      },
+      "text": "Passion fruit vines need consistent moisture but are susceptible to root diseases in waterlogged soils. Maintain soil moisture at 30-38%. Use trellised drip irrigation. Ensure good drainage. Mulch vine base to regulate soil temperature. Passion Fruit fruit soil moisture 35 temperature 26 humidity 70 rainfall 6"
+    },
+    {
+      "id": "28",
+      "crop": "Turmeric",
+      "description": "Turmeric needs high moisture during active growth phase. The rhizomes develop best with consistent warm wet conditions.",
+      "recommendation": "Irrigate every 5-7 days during vegetative growth. Maintain soil moisture above 40%. Reduce irrigation one month before harvest.",
+      "soil_moisture": "42",
+      "temp": "28",
+      "humidity": "78",
+      "rainfall": "8",
+      "category": "spice",
+      "normalized": {
+        "soilMoisture": 42,
+        "temperature": 28,
+        "humidity": 78,
+        "rainfall": 8
+      },
+      "text": "Turmeric needs high moisture during active growth phase. The rhizomes develop best with consistent warm wet conditions. Irrigate every 5-7 days during vegetative growth. Maintain soil moisture above 40%. Reduce irrigation one month before harvest. Turmeric spice soil moisture 42 temperature 28 humidity 78 rainfall 8"
+    },
+    {
+      "id": "29",
+      "crop": "Ginger",
+      "description": "Ginger requires consistent moisture for rhizome development. Drought causes fibrous tough rhizomes with reduced quality.",
+      "recommendation": "Irrigate every 4-5 days. Maintain soil moisture at 35-45%. Use mulching extensively. Avoid waterlogging which causes rhizome rot.",
+      "soil_moisture": "40",
+      "temp": "27",
+      "humidity": "75",
+      "rainfall": "7",
+      "category": "spice",
+      "normalized": {
+        "soilMoisture": 40,
+        "temperature": 27,
+        "humidity": 75,
+        "rainfall": 7
+      },
+      "text": "Ginger requires consistent moisture for rhizome development. Drought causes fibrous tough rhizomes with reduced quality. Irrigate every 4-5 days. Maintain soil moisture at 35-45%. Use mulching extensively. Avoid waterlogging which causes rhizome rot. Ginger spice soil moisture 40 temperature 27 humidity 75 rainfall 7"
+    },
+    {
+      "id": "30",
+      "crop": "Black Pepper",
+      "description": "Black pepper vines are moisture-loving climbers that need humidity for berry development. Dry conditions cause berry drop.",
+      "recommendation": "Irrigate vines during dry season. Maintain soil moisture above 35%. Use basin irrigation around the support pole. Mulch generously.",
+      "soil_moisture": "38",
+      "temp": "28",
+      "humidity": "80",
+      "rainfall": "8",
+      "category": "spice",
+      "normalized": {
+        "soilMoisture": 38,
+        "temperature": 28,
+        "humidity": 80,
+        "rainfall": 8
+      },
+      "text": "Black pepper vines are moisture-loving climbers that need humidity for berry development. Dry conditions cause berry drop. Irrigate vines during dry season. Maintain soil moisture above 35%. Use basin irrigation around the support pole. Mulch generously. Black Pepper spice soil moisture 38 temperature 28 humidity 80 rainfall 8"
+    },
+    {
+      "id": "31",
+      "crop": "Cinnamon",
+      "description": "Cinnamon trees are drought tolerant once established but young plants need regular moisture. Quality improves with moderate stress.",
+      "recommendation": "Water young plants weekly. Established trees need irrigation only during severe drought. Maintain soil moisture at 25-35%.",
+      "soil_moisture": "30",
+      "temp": "28",
+      "humidity": "72",
+      "rainfall": "6",
+      "category": "spice",
+      "normalized": {
+        "soilMoisture": 30,
+        "temperature": 28,
+        "humidity": 72,
+        "rainfall": 6
+      },
+      "text": "Cinnamon trees are drought tolerant once established but young plants need regular moisture. Quality improves with moderate stress. Water young plants weekly. Established trees need irrigation only during severe drought. Maintain soil moisture at 25-35%. Cinnamon spice soil moisture 30 temperature 28 humidity 72 rainfall 6"
+    },
+    {
+      "id": "32",
+      "crop": "Clove",
+      "description": "Clove trees thrive in humid tropical conditions. Flowering is triggered by a dry period followed by moisture.",
+      "recommendation": "Allow mild dry stress before expected flowering. Resume regular irrigation after bud formation. Maintain 30-40% soil moisture during fruit development.",
+      "soil_moisture": "35",
+      "temp": "26",
+      "humidity": "82",
+      "rainfall": "9",
+      "category": "spice",
+      "normalized": {
+        "soilMoisture": 35,
+        "temperature": 26,
+        "humidity": 82,
+        "rainfall": 9
+      },
+      "text": "Clove trees thrive in humid tropical conditions. Flowering is triggered by a dry period followed by moisture. Allow mild dry stress before expected flowering. Resume regular irrigation after bud formation. Maintain 30-40% soil moisture during fruit development. Clove spice soil moisture 35 temperature 26 humidity 82 rainfall 9"
+    },
+    {
+      "id": "33",
+      "crop": "Mushroom",
+      "description": "Mushrooms require high humidity environments with specific substrate moisture levels. Air moisture is more critical than soil moisture.",
+      "recommendation": "Maintain substrate moisture at 60-65%. Keep growing area humidity above 85%. Mist frequently rather than heavy watering. Ensure good air exchange.",
+      "soil_moisture": "62",
+      "temp": "22",
+      "humidity": "90",
+      "rainfall": "0",
+      "category": "fungi",
+      "normalized": {
+        "soilMoisture": 62,
+        "temperature": 22,
+        "humidity": 90,
+        "rainfall": 0
+      },
+      "text": "Mushrooms require high humidity environments with specific substrate moisture levels. Air moisture is more critical than soil moisture. Maintain substrate moisture at 60-65%. Keep growing area humidity above 85%. Mist frequently rather than heavy watering. Ensure good air exchange. Mushroom fungi soil moisture 62 temperature 22 humidity 90 rainfall 0"
+    },
+    {
+      "id": "34",
+      "crop": "Paddy Drought Management",
+      "description": "During drought conditions paddy fields face severe yield losses. Alternate wetting and drying (AWD) saves 20-30% water with minimal yield impact.",
+      "recommendation": "Implement AWD technique by allowing field water to drop 15cm below soil surface before re-flooding. Install field water tubes to monitor water depth.",
+      "soil_moisture": "35",
+      "temp": "33",
+      "humidity": "60",
+      "rainfall": "0",
+      "category": "management",
+      "normalized": {
+        "soilMoisture": 35,
+        "temperature": 33,
+        "humidity": 60,
+        "rainfall": 0
+      },
+      "text": "During drought conditions paddy fields face severe yield losses. Alternate wetting and drying (AWD) saves 20-30% water with minimal yield impact. Implement AWD technique by allowing field water to drop 15cm below soil surface before re-flooding. Install field water tubes to monitor water depth. Paddy Drought Management management soil moisture 35 temperature 33 humidity 60 rainfall 0"
+    },
+    {
+      "id": "35",
+      "crop": "Drip Irrigation Best Practice",
+      "description": "Drip irrigation delivers water directly to the root zone reducing evaporation losses by 30-50% compared to flood irrigation.",
+      "recommendation": "Install drip lines within 30cm of plant base. Run system for 30-60 minutes per session. Schedule early morning irrigation to minimize evaporation losses.",
+      "soil_moisture": "30",
+      "temp": "30",
+      "humidity": "55",
+      "rainfall": "2",
+      "category": "management",
+      "normalized": {
+        "soilMoisture": 30,
+        "temperature": 30,
+        "humidity": 55,
+        "rainfall": 2
+      },
+      "text": "Drip irrigation delivers water directly to the root zone reducing evaporation losses by 30-50% compared to flood irrigation. Install drip lines within 30cm of plant base. Run system for 30-60 minutes per session. Schedule early morning irrigation to minimize evaporation losses. Drip Irrigation Best Practice management soil moisture 30 temperature 30 humidity 55 rainfall 2"
+    },
+    {
+      "id": "36",
+      "crop": "Mulching Water Conservation",
+      "description": "Organic mulching reduces soil evaporation by 25-50% and moderates soil temperature fluctuations. Effective for all tropical crops.",
+      "recommendation": "Apply 5-10cm layer of organic mulch (rice straw, coconut husks, leaves). Replenish monthly. Keep mulch 10cm away from plant stems to prevent stem rot.",
+      "soil_moisture": "30",
+      "temp": "30",
+      "humidity": "65",
+      "rainfall": "4",
+      "category": "management",
+      "normalized": {
+        "soilMoisture": 30,
+        "temperature": 30,
+        "humidity": 65,
+        "rainfall": 4
+      },
+      "text": "Organic mulching reduces soil evaporation by 25-50% and moderates soil temperature fluctuations. Effective for all tropical crops. Apply 5-10cm layer of organic mulch (rice straw, coconut husks, leaves). Replenish monthly. Keep mulch 10cm away from plant stems to prevent stem rot. Mulching Water Conservation management soil moisture 30 temperature 30 humidity 65 rainfall 4"
+    },
+    {
+      "id": "37",
+      "crop": "Soil Moisture Monitoring",
+      "description": "Continuous soil moisture monitoring enables precision irrigation scheduling. Sensors should be placed at root zone depth for each crop.",
+      "recommendation": "Place sensors at 15cm depth for shallow-rooted crops and 30cm for deep-rooted crops. Calibrate monthly. Use trend data to predict irrigation needs 6-12 hours ahead.",
+      "soil_moisture": "35",
+      "temp": "28",
+      "humidity": "60",
+      "rainfall": "3",
+      "category": "management",
+      "normalized": {
+        "soilMoisture": 35,
+        "temperature": 28,
+        "humidity": 60,
+        "rainfall": 3
+      },
+      "text": "Continuous soil moisture monitoring enables precision irrigation scheduling. Sensors should be placed at root zone depth for each crop. Place sensors at 15cm depth for shallow-rooted crops and 30cm for deep-rooted crops. Calibrate monthly. Use trend data to predict irrigation needs 6-12 hours ahead. Soil Moisture Monitoring management soil moisture 35 temperature 28 humidity 60 rainfall 3"
+    },
+    {
+      "id": "38",
+      "crop": "Nitrogen Fertilizer Management",
+      "description": "Nitrogen application timing directly affects irrigation needs. Over-fertilization with nitrogen increases vegetative growth and water demand.",
+      "recommendation": "Split nitrogen application into 3-4 doses during crop growth. Apply after irrigation when soil is moist. Avoid applying before heavy expected rainfall.",
+      "soil_moisture": "35",
+      "temp": "28",
+      "humidity": "62",
+      "rainfall": "5",
+      "category": "fertilizer",
+      "normalized": {
+        "soilMoisture": 35,
+        "temperature": 28,
+        "humidity": 62,
+        "rainfall": 5
+      },
+      "text": "Nitrogen application timing directly affects irrigation needs. Over-fertilization with nitrogen increases vegetative growth and water demand. Split nitrogen application into 3-4 doses during crop growth. Apply after irrigation when soil is moist. Avoid applying before heavy expected rainfall. Nitrogen Fertilizer Management fertilizer soil moisture 35 temperature 28 humidity 62 rainfall 5"
+    },
+    {
+      "id": "39",
+      "crop": "Phosphorus Soil Health",
+      "description": "Phosphorus promotes root development and helps plants access water from deeper soil layers. Deficiency shows as purple leaf discoloration.",
+      "recommendation": "Apply phosphorus during land preparation. Maintain soil pH between 6.0-7.0 for optimal phosphorus availability. Use rock phosphate for slow-release application.",
+      "soil_moisture": "32",
+      "temp": "28",
+      "humidity": "60",
+      "rainfall": "4",
+      "category": "fertilizer",
+      "normalized": {
+        "soilMoisture": 32,
+        "temperature": 28,
+        "humidity": 60,
+        "rainfall": 4
+      },
+      "text": "Phosphorus promotes root development and helps plants access water from deeper soil layers. Deficiency shows as purple leaf discoloration. Apply phosphorus during land preparation. Maintain soil pH between 6.0-7.0 for optimal phosphorus availability. Use rock phosphate for slow-release application. Phosphorus Soil Health fertilizer soil moisture 32 temperature 28 humidity 60 rainfall 4"
+    },
+    {
+      "id": "40",
+      "crop": "Potassium Drought Resistance",
+      "description": "Potassium strengthens cell walls and regulates stomata helping plants retain water during heat stress. Critical for fruit quality.",
+      "recommendation": "Apply potassium sulfate during fruit development stage. Split applications into 2-3 doses. Potassium improves shelf life and sugar content in fruits.",
+      "soil_moisture": "30",
+      "temp": "30",
+      "humidity": "55",
+      "rainfall": "3",
+      "category": "fertilizer",
+      "normalized": {
+        "soilMoisture": 30,
+        "temperature": 30,
+        "humidity": 55,
+        "rainfall": 3
+      },
+      "text": "Potassium strengthens cell walls and regulates stomata helping plants retain water during heat stress. Critical for fruit quality. Apply potassium sulfate during fruit development stage. Split applications into 2-3 doses. Potassium improves shelf life and sugar content in fruits. Potassium Drought Resistance fertilizer soil moisture 30 temperature 30 humidity 55 rainfall 3"
+    },
+    {
+      "id": "41",
+      "crop": "Organic Compost Application",
+      "description": "Well-decomposed compost improves soil water-holding capacity by 20% and reduces irrigation frequency. Essential for sandy soils.",
+      "recommendation": "Apply 5-10 tons per hectare of decomposed compost during land preparation. Incorporate into top 20cm of soil. Supplement with inorganic fertilizers as needed.",
+      "soil_moisture": "35",
+      "temp": "28",
+      "humidity": "65",
+      "rainfall": "5",
+      "category": "fertilizer",
+      "normalized": {
+        "soilMoisture": 35,
+        "temperature": 28,
+        "humidity": 65,
+        "rainfall": 5
+      },
+      "text": "Well-decomposed compost improves soil water-holding capacity by 20% and reduces irrigation frequency. Essential for sandy soils. Apply 5-10 tons per hectare of decomposed compost during land preparation. Incorporate into top 20cm of soil. Supplement with inorganic fertilizers as needed. Organic Compost Application fertilizer soil moisture 35 temperature 28 humidity 65 rainfall 5"
+    },
+    {
+      "id": "42",
+      "crop": "Leaf Blight Disease",
+      "description": "Leaf blight is a fungal disease aggravated by overhead irrigation and high humidity. Common in rice tomato and potato crops.",
+      "recommendation": "Avoid overhead irrigation during disease pressure. Ensure good air circulation. Apply copper-based fungicide preventively. Remove infected plant material.",
+      "soil_moisture": "35",
+      "temp": "28",
+      "humidity": "85",
+      "rainfall": "8",
+      "category": "pest_disease",
+      "normalized": {
+        "soilMoisture": 35,
+        "temperature": 28,
+        "humidity": 85,
+        "rainfall": 8
+      },
+      "text": "Leaf blight is a fungal disease aggravated by overhead irrigation and high humidity. Common in rice tomato and potato crops. Avoid overhead irrigation during disease pressure. Ensure good air circulation. Apply copper-based fungicide preventively. Remove infected plant material. Leaf Blight Disease pest_disease soil moisture 35 temperature 28 humidity 85 rainfall 8"
+    },
+    {
+      "id": "43",
+      "crop": "Root Rot Prevention",
+      "description": "Root rot is caused by waterlogging and poor drainage. Affects most tropical crops especially during heavy monsoon periods.",
+      "recommendation": "Improve drainage channels. Avoid over-irrigation. Raise planting beds in heavy soils. Apply Trichoderma biological control agent to soil before planting.",
+      "soil_moisture": "45",
+      "temp": "28",
+      "humidity": "80",
+      "rainfall": "12",
+      "category": "pest_disease",
+      "normalized": {
+        "soilMoisture": 45,
+        "temperature": 28,
+        "humidity": 80,
+        "rainfall": 12
+      },
+      "text": "Root rot is caused by waterlogging and poor drainage. Affects most tropical crops especially during heavy monsoon periods. Improve drainage channels. Avoid over-irrigation. Raise planting beds in heavy soils. Apply Trichoderma biological control agent to soil before planting. Root Rot Prevention pest_disease soil moisture 45 temperature 28 humidity 80 rainfall 12"
+    },
+    {
+      "id": "44",
+      "crop": "Aphid Pest Management",
+      "description": "Aphids thrive in moderate temperature and humidity. They transmit viral diseases and reduce plant vigor through sap feeding.",
+      "recommendation": "Monitor undersides of leaves weekly. Use neem oil spray at first sign. Introduce ladybug beetles as biological control. Avoid excessive nitrogen fertilization.",
+      "soil_moisture": "30",
+      "temp": "25",
+      "humidity": "65",
+      "rainfall": "3",
+      "category": "pest_disease",
+      "normalized": {
+        "soilMoisture": 30,
+        "temperature": 25,
+        "humidity": 65,
+        "rainfall": 3
+      },
+      "text": "Aphids thrive in moderate temperature and humidity. They transmit viral diseases and reduce plant vigor through sap feeding. Monitor undersides of leaves weekly. Use neem oil spray at first sign. Introduce ladybug beetles as biological control. Avoid excessive nitrogen fertilization. Aphid Pest Management pest_disease soil moisture 30 temperature 25 humidity 65 rainfall 3"
+    },
+    {
+      "id": "45",
+      "crop": "Fruit Fly Control",
+      "description": "Fruit flies damage ripening fruits causing premature drop and rot. They are attracted by fermented fruit odors.",
+      "recommendation": "Set up methyl eugenol traps at 10 per hectare. Harvest fruits at mature green stage. Collect and destroy fallen fruits. Maintain field hygiene.",
+      "soil_moisture": "28",
+      "temp": "30",
+      "humidity": "60",
+      "rainfall": "4",
+      "category": "pest_disease",
+      "normalized": {
+        "soilMoisture": 28,
+        "temperature": 30,
+        "humidity": 60,
+        "rainfall": 4
+      },
+      "text": "Fruit flies damage ripening fruits causing premature drop and rot. They are attracted by fermented fruit odors. Set up methyl eugenol traps at 10 per hectare. Harvest fruits at mature green stage. Collect and destroy fallen fruits. Maintain field hygiene. Fruit Fly Control pest_disease soil moisture 28 temperature 30 humidity 60 rainfall 4"
+    },
+    {
+      "id": "46",
+      "crop": "Whitefly Management",
+      "description": "Whiteflies are vectors for plant viruses and thrive in warm dry conditions. Common in tomato chili and cucumber crops.",
+      "recommendation": "Install yellow sticky traps for monitoring. Use reflective mulch to deter whiteflies. Apply insecticidal soap or neem extract at early infestation stage.",
+      "soil_moisture": "30",
+      "temp": "32",
+      "humidity": "50",
+      "rainfall": "2",
+      "category": "pest_disease",
+      "normalized": {
+        "soilMoisture": 30,
+        "temperature": 32,
+        "humidity": 50,
+        "rainfall": 2
+      },
+      "text": "Whiteflies are vectors for plant viruses and thrive in warm dry conditions. Common in tomato chili and cucumber crops. Install yellow sticky traps for monitoring. Use reflective mulch to deter whiteflies. Apply insecticidal soap or neem extract at early infestation stage. Whitefly Management pest_disease soil moisture 30 temperature 32 humidity 50 rainfall 2"
+    },
+    {
+      "id": "47",
+      "crop": "Soil pH Optimization",
+      "description": "Soil pH affects nutrient availability and microbial activity. Most crops prefer pH 6.0-7.0. Acidic soils need liming.",
+      "recommendation": "Test soil pH before each planting season. Apply agricultural lime at 2-4 tons per hectare for acidic soils. Mix lime into soil 2-4 weeks before planting.",
+      "soil_moisture": "32",
+      "temp": "28",
+      "humidity": "60",
+      "rainfall": "5",
+      "category": "soil_health",
+      "normalized": {
+        "soilMoisture": 32,
+        "temperature": 28,
+        "humidity": 60,
+        "rainfall": 5
+      },
+      "text": "Soil pH affects nutrient availability and microbial activity. Most crops prefer pH 6.0-7.0. Acidic soils need liming. Test soil pH before each planting season. Apply agricultural lime at 2-4 tons per hectare for acidic soils. Mix lime into soil 2-4 weeks before planting. Soil pH Optimization soil_health soil moisture 32 temperature 28 humidity 60 rainfall 5"
+    },
+    {
+      "id": "48",
+      "crop": "Crop Rotation Benefits",
+      "description": "Crop rotation breaks pest and disease cycles reduces soil nutrient depletion and improves soil structure.",
+      "recommendation": "Rotate between legumes cereals and vegetables. Follow heavy feeders (cabbage maize) with nitrogen-fixing legumes (bean groundnut). Maintain 3-year rotation minimum.",
+      "soil_moisture": "30",
+      "temp": "28",
+      "humidity": "62",
+      "rainfall": "4",
+      "category": "management",
+      "normalized": {
+        "soilMoisture": 30,
+        "temperature": 28,
+        "humidity": 62,
+        "rainfall": 4
+      },
+      "text": "Crop rotation breaks pest and disease cycles reduces soil nutrient depletion and improves soil structure. Rotate between legumes cereals and vegetables. Follow heavy feeders (cabbage maize) with nitrogen-fixing legumes (bean groundnut). Maintain 3-year rotation minimum. Crop Rotation Benefits management soil moisture 30 temperature 28 humidity 62 rainfall 4"
+    },
+    {
+      "id": "49",
+      "crop": "Rainwater Harvesting",
+      "description": "Collecting and storing rainwater reduces dependence on irrigation infrastructure. One hectare can yield 5000-10000 cubic meters annually.",
+      "recommendation": "Install rainwater collection systems from farm building roofs. Build farm ponds with 500-1000 cubic meter capacity. Use stored water during dry spells.",
+      "soil_moisture": "25",
+      "temp": "28",
+      "humidity": "70",
+      "rainfall": "15",
+      "category": "management",
+      "normalized": {
+        "soilMoisture": 25,
+        "temperature": 28,
+        "humidity": 70,
+        "rainfall": 15
+      },
+      "text": "Collecting and storing rainwater reduces dependence on irrigation infrastructure. One hectare can yield 5000-10000 cubic meters annually. Install rainwater collection systems from farm building roofs. Build farm ponds with 500-1000 cubic meter capacity. Use stored water during dry spells. Rainwater Harvesting management soil moisture 25 temperature 28 humidity 70 rainfall 15"
+    },
+    {
+      "id": "50",
+      "crop": "Heat Stress Crop Management",
+      "description": "Temperatures above 35°C cause pollen sterility in most crops. Combined with low humidity this creates critical yield loss risk.",
+      "recommendation": "Schedule irrigation during evening to reduce soil temperature. Use shade cloth for sensitive crops. Apply kaolin clay spray to reflect sunlight from leaves.",
+      "soil_moisture": "25",
+      "temp": "38",
+      "humidity": "40",
+      "rainfall": "0",
+      "category": "management",
+      "normalized": {
+        "soilMoisture": 25,
+        "temperature": 38,
+        "humidity": 40,
+        "rainfall": 0
+      },
+      "text": "Temperatures above 35°C cause pollen sterility in most crops. Combined with low humidity this creates critical yield loss risk. Schedule irrigation during evening to reduce soil temperature. Use shade cloth for sensitive crops. Apply kaolin clay spray to reflect sunlight from leaves. Heat Stress Crop Management management soil moisture 25 temperature 38 humidity 40 rainfall 0"
+    },
+    {
+      "id": "51",
+      "crop": "Salinity Management",
+      "description": "Excess soil salinity from over-irrigation or poor drainage reduces crop water uptake. White salt crusts on soil surface indicate problems.",
+      "recommendation": "Leach salts by applying 20% more water than crop needs quarterly. Improve drainage. Apply gypsum at 2-5 tons per hectare. Plant salt-tolerant crops in affected areas.",
+      "soil_moisture": "35",
+      "temp": "30",
+      "humidity": "55",
+      "rainfall": "3",
+      "category": "soil_health",
+      "normalized": {
+        "soilMoisture": 35,
+        "temperature": 30,
+        "humidity": 55,
+        "rainfall": 3
+      },
+      "text": "Excess soil salinity from over-irrigation or poor drainage reduces crop water uptake. White salt crusts on soil surface indicate problems. Leach salts by applying 20% more water than crop needs quarterly. Improve drainage. Apply gypsum at 2-5 tons per hectare. Plant salt-tolerant crops in affected areas. Salinity Management soil_health soil moisture 35 temperature 30 humidity 55 rainfall 3"
+    },
+    {
+      "id": "52",
+      "crop": "Cover Crop Water Management",
+      "description": "Cover crops like mucuna and sun hemp protect soil from erosion improve water infiltration and add organic matter when incorporated.",
+      "recommendation": "Plant cover crops during fallow periods. Incorporate into soil 2-3 weeks before main crop planting. Leave residue as mulch for moisture conservation.",
+      "soil_moisture": "30",
+      "temp": "28",
+      "humidity": "65",
+      "rainfall": "6",
+      "category": "management",
+      "normalized": {
+        "soilMoisture": 30,
+        "temperature": 28,
+        "humidity": 65,
+        "rainfall": 6
+      },
+      "text": "Cover crops like mucuna and sun hemp protect soil from erosion improve water infiltration and add organic matter when incorporated. Plant cover crops during fallow periods. Incorporate into soil 2-3 weeks before main crop planting. Leave residue as mulch for moisture conservation. Cover Crop Water Management management soil moisture 30 temperature 28 humidity 65 rainfall 6"
     }
   ]
 }
